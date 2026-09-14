@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L</title>
+  <title>L - Catálogo & Ardis TV</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,9 @@
             netflixHover: '#B81D24',
             netflixDark: '#141414',
             netflixCard: '#181818',
-            netflixHeader: '#0b0b0b'
+            netflixHeader: '#0b0b0b',
+            ardisPurple: '#8B5CF6',
+            ardisDark: '#0f0c1b'
           },
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
@@ -81,28 +83,42 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card-zoom:hover {
-      transform: scale(1.05);
-      z-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+      transform: scale(1.04);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    }
+
+    .ardis-glow {
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+    }
+
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .animate-pulse-live {
+      animation: pulse-live 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-netflixDark text-white antialiased">
 
+  <!-- Toast Alert System -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
+  <!-- TELA DE AUTENTICAÇÃO PRINCIPAL (PLATAFORMA L) -->
   <div id="auth-screen" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/80 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/f8472e38-e3f6-4080-8323-0186c3214d0c/26063842-2236-4740-9a27-a9a3f2d01115/BR-pt-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay">
     
     <div class="w-full max-w-md bg-black/85 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-2xl border border-white/10">
       
-      <!-- LOGO -->
+      <!-- LOGO L -->
       <div class="text-center mb-8">
         <h1 class="text-3xl font-black tracking-widest text-netflixRed uppercase drop-shadow-md">
-          <i class="fa-solid fa-[#E50914] fa-film mr-2"></i>L
+          <i class="fa-solid fa-film mr-2"></i>L
         </h1>
-        <p class="text-xs text-gray-400 mt-1">Seu catálogo de vídeos particular</p>
+        <p class="text-xs text-gray-400 mt-1">Seu catálogo de vídeos particular & Ardis TV</p>
       </div>
 
-      <!-- TELA DE LOGIN -->
+      <!-- TELA DE LOGIN PRINCIPAL -->
       <form id="login-form" class="space-y-4">
         <h2 class="text-2xl font-bold mb-4">Entrar</h2>
         
@@ -140,7 +156,7 @@
         </div>
       </form>
 
-      <!-- TELA DE CADASTRO -->
+      <!-- TELA DE CADASTRO PRINCIPAL -->
       <form id="register-form" class="space-y-4 hidden">
         <h2 class="text-2xl font-bold mb-4">Criar Conta</h2>
         
@@ -191,25 +207,26 @@
     </div>
   </div>
 
+  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="main-app" class="hidden flex-col min-h-screen">
     
-    <!-- NAVBAR -->
+    <!-- NAVBAR DA PLATAFORMA L -->
     <header class="sticky top-0 z-30 bg-netflixHeader/95 backdrop-blur-md border-b border-white/5 px-4 md:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
       
       <!-- Logo & Brand -->
       <div class="flex items-center space-x-6">
-        <span class="text-2xl font-black tracking-wider text-netflixRed uppercase cursor-pointer select-none">
-          L
+        <span id="nav-logo-home" class="text-2xl font-black tracking-wider text-netflixRed uppercase cursor-pointer select-none flex items-center gap-2">
+          <span>L</span>
         </span>
       </div>
 
-      <!-- Search Bar -->
-      <div class="flex-1 max-w-md mx-auto w-full">
+      <!-- Search Bar (Visível no Catálogo) -->
+      <div id="nav-search-container" class="flex-1 max-w-md mx-auto w-full">
         <div class="relative">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none">
             <i class="fa-solid fa-magnifying-glass text-sm"></i>
           </span>
-          <input type="text" id="search-input" placeholder="Pesquisar por filme ou série (ex: A, B, Batman...)" class="w-full pl-10 pr-10 py-2 bg-[#222] text-white placeholder-gray-400 rounded-full border border-gray-700 focus:outline-none focus:ring-2 focus:ring-netflixRed focus:border-transparent transition text-sm">
+          <input type="text" id="search-input" placeholder="Pesquisar no catálogo (ex: A, B, Batman...)" class="w-full pl-10 pr-10 py-2 bg-[#222] text-white placeholder-gray-400 rounded-full border border-gray-700 focus:outline-none focus:ring-2 focus:ring-netflixRed focus:border-transparent transition text-sm">
           <button id="clear-search" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white hidden">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -219,10 +236,16 @@
       <!-- Action Buttons & User Menu -->
       <div class="flex items-center space-x-3">
         
+        <!-- BOTÃO DESTAQUE: ARDIS TV -->
+        <button id="btn-toggle-ardis" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition transform hover:scale-105 border border-purple-400/30">
+          <i class="fa-solid fa-tv text-amber-300 animate-pulse"></i>
+          <span>Ardis TV</span>
+        </button>
+
         <!-- Botão Especial de Enviar Filme / Série (Exclusivo para Lorenzo) -->
         <button id="btn-upload-content" class="hidden bg-netflixRed hover:bg-netflixHover text-white px-4 py-2 rounded-lg font-bold text-sm items-center gap-2 shadow-lg transition duration-200">
           <i class="fa-solid fa-plus"></i>
-          <span>Enviar Filme / Série</span>
+          <span class="hidden sm:inline">Enviar Filme/Série</span>
         </button>
 
         <!-- Profile Badge -->
@@ -239,9 +262,10 @@
       </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
+    <!-- VIEW 1: CATÁLOGO PRINCIPAL DA PLATAFORMA L -->
+    <div id="catalog-view" class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
       
-      <!-- HERO BANNER BIENVENIDA -->
+      <!-- HERO BANNER BOAS VINDAS -->
       <div id="welcome-banner" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-red-900/40 via-black to-black p-6 md:p-10 mb-8 border border-white/5 shadow-2xl">
         <div class="max-w-2xl relative z-10">
           <span class="inline-block bg-netflixRed text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
@@ -250,20 +274,23 @@
           <h2 class="text-3xl md:text-5xl font-black leading-tight mb-2">
             Bem-vindo, <span id="hero-username-text" class="text-netflixRed">Jogador</span>!
           </h2>
-          <p class="text-gray-300 text-sm md:text-base">
-            Assista aos seus filmes e séries favoritos salvos em tempo real. Digite qualquer letra na barra de pesquisa para filtrar o catálogo!
+          <p class="text-gray-300 text-sm md:text-base mb-4">
+            Assista aos seus filmes e séries favoritos salvos em tempo real ou explore a nova programação da <strong class="text-purple-400">Ardis TV</strong>!
           </p>
+          <button id="hero-btn-ardis" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg shadow-lg transition">
+            <i class="fa-solid fa-satellite-dish"></i> Entrar na Ardis TV
+          </button>
         </div>
         <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 bg-gradient-to-l from-netflixRed to-transparent pointer-events-none hidden md:block"></div>
       </div>
 
-      <!-- MENSAGEM QUANDO LORENZO LOGAR -->
+      <!-- MENSAGEM ADMIN LORENZO NO CATÁLOGO -->
       <div id="lorenzo-notice" class="hidden bg-gradient-to-r from-red-950/60 to-black border-l-4 border-netflixRed p-4 rounded-r-xl mb-6 shadow-md">
         <div class="flex items-center">
           <i class="fa-solid fa-crown text-amber-400 text-xl mr-3"></i>
           <div>
             <h4 class="font-bold text-sm text-amber-400">Conta Admin Detectada (Lorenzo)</h4>
-            <p class="text-xs text-gray-300">Você possui privilégios para enviar novos filmes, criar séries e gerenciar episódios!</p>
+            <p class="text-xs text-gray-300">Você possui privilégios de administrador para publicar no Catálogo e na Ardis TV!</p>
           </div>
         </div>
       </div>
@@ -293,24 +320,151 @@
         <p class="text-sm max-w-sm">Tente pesquisar por outra letra ou peça ao Lorenzo para cadastrar novos títulos!</p>
       </div>
 
-    </main>
+    </div>
+
+
+    <!-- VIEW 2: MÓDULO DA ARDIS TV -->
+    <div id="ardis-tv-view" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
+      
+      <!-- SUB-VIEW 2A: TELA DE LOGIN / CADASTRO DA ARDIS TV (SE AINDA NÃO AUTENTICADO NA ARDIS) -->
+      <div id="ardis-auth-card" class="max-w-md mx-auto my-12 bg-ardisDark border border-purple-500/30 p-8 rounded-2xl shadow-2xl ardis-glow">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-3 border border-purple-500/40 text-2xl">
+            <i class="fa-solid fa-satellite-dish"></i>
+          </div>
+          <h2 class="text-2xl font-black text-white tracking-wide">Acessar <span class="text-purple-400">Ardis TV</span></h2>
+          <p class="text-xs text-gray-400 mt-1">Informe seu nome e senha da Ardis TV para ver a programação!</p>
+        </div>
+
+        <form id="ardis-auth-form" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Seu Nome (Completo ou Primeiro Nome)</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <i class="fa-solid fa-user-tag text-sm"></i>
+              </span>
+              <input type="text" id="ardis-input-name" required placeholder="Ex: Lorenzo ou João da Silva" class="w-full pl-10 pr-4 py-3 bg-[#1e1935] text-white rounded-lg border border-purple-900 focus:outline-none focus:border-purple-500 transition">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Senha da Ardis TV</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <i class="fa-solid fa-key text-sm"></i>
+              </span>
+              <input type="password" id="ardis-input-password" required placeholder="Crie ou digite sua senha" class="w-full pl-10 pr-4 py-3 bg-[#1e1935] text-white rounded-lg border border-purple-900 focus:outline-none focus:border-purple-500 transition">
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-purple-600 hover:bg-purple-500 font-bold rounded-lg transition duration-200 shadow-lg text-white mt-2 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Entrar / Cadastrar na Ardis TV</span>
+          </button>
+        </form>
+      </div>
+
+
+      <!-- SUB-VIEW 2B: PROGRAMAÇÃO E TRANSMISSÃO DA ARDIS TV -->
+      <div id="ardis-content-card" class="hidden space-y-6">
+        
+        <!-- BARRA SUPERIOR DA ARDIS TV -->
+        <div class="flex flex-wrap items-center justify-between bg-ardisDark p-4 md:p-6 rounded-2xl border border-purple-500/30 gap-4 shadow-xl">
+          <div class="flex items-center space-x-3">
+            <div class="relative">
+              <span class="w-3 h-3 bg-red-500 rounded-full inline-block animate-pulse-live"></span>
+              <span class="absolute inset-0 w-3 h-3 bg-red-500 rounded-full opacity-75 animate-ping"></span>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-black text-white tracking-wide flex items-center gap-2">
+                <span>Ardis TV</span>
+                <span class="text-xs bg-red-600 text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider">AO VIVO</span>
+              </h2>
+              <p class="text-xs text-purple-300">Conectado como <strong id="ardis-user-display-name" class="text-white">Usuário</strong></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- Botão Lorenzo publicar atração na Ardis TV -->
+            <button id="btn-ardis-admin-post" class="hidden bg-amber-500 hover:bg-amber-400 text-black px-4 py-2 rounded-lg font-extrabold text-xs items-center gap-2 shadow-lg transition">
+              <i class="fa-solid fa-plus-circle"></i>
+              <span>Postar na Ardis TV (Lorenzo)</span>
+            </button>
+
+            <!-- Voltar para o Catálogo -->
+            <button id="btn-back-to-catalog" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-2 border border-gray-700 transition">
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Voltar ao Catálogo L</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PAINEL DE TRANSMISSÃO EM DESTAQUE (PLAYER ARDIS TV) -->
+        <div class="bg-black/80 rounded-2xl overflow-hidden border border-purple-500/30 shadow-2xl">
+          <div class="p-4 bg-[#120e24] border-b border-purple-900/50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-tv text-purple-400"></i>
+              <h3 id="ardis-now-playing-title" class="font-bold text-sm text-white truncate">Selecione um programa abaixo ou aguarde a transmissão</h3>
+            </div>
+            <span id="ardis-now-playing-time" class="text-xs font-semibold bg-purple-950 text-purple-300 border border-purple-800 px-2.5 py-1 rounded-full">
+              Programação Ativa
+            </span>
+          </div>
+
+          <div class="relative w-full aspect-video bg-black flex items-center justify-center">
+            <iframe id="ardis-player-iframe" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div id="ardis-player-placeholder" class="absolute inset-0 bg-[#0a0814] flex flex-col items-center justify-center p-6 text-center">
+              <i class="fa-solid fa-satellite text-5xl text-purple-500/40 mb-3 animate-bounce"></i>
+              <h4 class="text-lg font-bold text-gray-200">Bem-vindo à Ardis TV</h4>
+              <p class="text-xs text-gray-400 max-w-md mt-1">Clique em qualquer programa da grade abaixo para assistir ao vídeo ou acompanhar o que vai passar!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRADE: "O QUE VAI PASSAR / PROGRAMAÇÃO DA ARDIS TV" -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg md:text-xl font-bold flex items-center gap-2 text-white">
+              <i class="fa-solid fa-list-check text-purple-400"></i>
+              <span>O que vai passar (Programação Oficial)</span>
+            </h3>
+            <span id="ardis-schedule-count" class="text-xs text-purple-300 font-medium bg-[#1e1935] border border-purple-900/60 px-3 py-1 rounded-full">
+              0 atrações
+            </span>
+          </div>
+
+          <div id="ardis-schedule-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Cards da programação renderizados via JavaScript -->
+          </div>
+
+          <!-- Estado Vazio da Ardis TV -->
+          <div id="ardis-schedule-empty" class="hidden flex-col items-center justify-center py-12 text-center text-gray-400 bg-ardisDark/60 rounded-2xl border border-purple-900/30">
+            <i class="fa-solid fa-calendar-xmark text-4xl text-purple-400/50 mb-2"></i>
+            <h4 class="text-base font-bold text-white">Nenhum filme ou programa agendado</h4>
+            <p class="text-xs max-w-xs mt-1 text-gray-400">O Lorenzo adicionará novos programas em breve para a Ardis TV!</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 
     <!-- FOOTER -->
     <footer class="mt-auto border-t border-white/5 bg-black py-6 text-center text-xs text-gray-500">
-      <p>L &copy; 2026 - Conectado ao Firebase Realtime Database</p>
+      <p>L & Ardis TV &copy; 2026 - Conectado ao Firebase Realtime Database</p>
     </footer>
 
   </div>
 
 
-  <!-- MODAL: ENVIAR FILME / SÉRIE (EXCLUSIVO LORENZO) -->
+  <!-- MODAL: ENVIAR FILME / SÉRIE NO CATÁLOGO L (EXCLUSIVO LORENZO) -->
   <div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="bg-[#1c1c1c] w-full max-w-lg rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
       
       <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#111]">
         <h3 class="text-lg font-bold text-white flex items-center gap-2">
           <i class="fa-solid fa-cloud-arrow-up text-netflixRed"></i>
-          <span>Enviar Novo Conteúdo</span>
+          <span>Enviar Conteúdo para o Catálogo</span>
         </h3>
         <button class="close-modal text-gray-400 hover:text-white transition">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -319,7 +473,6 @@
 
       <form id="upload-form" class="p-6 space-y-4 overflow-y-auto flex-1">
         
-        <!-- TIPO DE CONTEÚDO -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-2">Tipo de Conteúdo</label>
           <div class="grid grid-cols-2 gap-3">
@@ -338,13 +491,11 @@
           </div>
         </div>
 
-        <!-- NOME DO FILME / SÉRIE -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Nome do Filme ou Série</label>
           <input type="text" id="content-title" required placeholder="Ex: Homem-Aranha, Stranger Things..." class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
         </div>
 
-        <!-- CLASSIFICAÇÃO INDICATIVA -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Classificação Indicativa</label>
           <select id="content-rating" required class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
@@ -357,18 +508,15 @@
           </select>
         </div>
 
-        <!-- LINK DO YOUTUBE -->
         <div id="youtube-link-container">
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link do Vídeo do YouTube</label>
           <input type="url" id="content-youtube" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
-          <p id="series-yt-note" class="text-xs text-gray-400 mt-1 hidden">*(Para séries, este link será o vídeo do 1º episódio ou trailer inicial)*</p>
+          <p id="series-yt-note" class="text-xs text-gray-400 mt-1 hidden">*(Para séries, este link será o vídeo do 1º episódio)*</p>
         </div>
 
-        <!-- CAPA / POSTER (OPCIONAL) -->
         <div>
-          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link da Imagem da Capa (Opcional)</label>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link da Capa (Opcional)</label>
           <input type="url" id="content-poster" placeholder="https://exemplo.com/imagem.jpg" class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
-          <span class="text-[10px] text-gray-400">Se deixar em branco, geraremos uma capa automática com o estilo do YouTube!</span>
         </div>
 
         <div class="pt-4 border-t border-gray-800 flex justify-end gap-3">
@@ -380,7 +528,66 @@
     </div>
   </div>
 
-  <!-- MODAL: GERENCIAR EPISÓDIOS DA SÉRIE (EXCLUSIVO LORENZO) -->
+
+  <!-- MODAL: POSTAR PROGRAMAÇÃO NA ARDIS TV (EXCLUSIVO LORENZO) -->
+  <div id="ardis-post-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="bg-ardisDark w-full max-w-lg rounded-2xl shadow-2xl border border-purple-500/30 overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <div class="px-6 py-4 border-b border-purple-900/50 flex items-center justify-between bg-[#120e24]">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-satellite-dish text-purple-400"></i>
+          <span>Nova Atração na Ardis TV</span>
+        </h3>
+        <button class="close-ardis-modal text-gray-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <form id="ardis-post-form" class="p-6 space-y-4 overflow-y-auto flex-1">
+        
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Nome do Filme / Atração</label>
+          <input type="text" id="ardis-post-title" required placeholder="Ex: Vingadores: Ultimato ou Batman" class="w-full px-4 py-2.5 bg-[#1a1530] text-white rounded-lg border border-purple-900/60 focus:outline-none focus:border-purple-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Horário / Quando vai passar</label>
+          <input type="text" id="ardis-post-time" required placeholder="Ex: Hoje às 20:00 ou AO VIVO AGORA" class="w-full px-4 py-2.5 bg-[#1a1530] text-white rounded-lg border border-purple-900/60 focus:outline-none focus:border-purple-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Classificação Indicativa</label>
+          <select id="ardis-post-rating" required class="w-full px-4 py-2.5 bg-[#1a1530] text-white rounded-lg border border-purple-900/60 focus:outline-none focus:border-purple-500">
+            <option value="L">Livre para todos os públicos</option>
+            <option value="10">10 anos</option>
+            <option value="12">12 anos</option>
+            <option value="14">14 anos</option>
+            <option value="16">16 anos</option>
+            <option value="18">18 anos</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link do Vídeo do YouTube</label>
+          <input type="url" id="ardis-post-youtube" required placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2.5 bg-[#1a1530] text-white rounded-lg border border-purple-900/60 focus:outline-none focus:border-purple-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link da Capa/Poster (Opcional)</label>
+          <input type="url" id="ardis-post-poster" placeholder="https://exemplo.com/imagem.jpg" class="w-full px-4 py-2.5 bg-[#1a1530] text-white rounded-lg border border-purple-900/60 focus:outline-none focus:border-purple-500">
+        </div>
+
+        <div class="pt-4 border-t border-purple-900/50 flex justify-end gap-3">
+          <button type="button" class="close-ardis-modal px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-semibold transition">Cancelar</button>
+          <button type="submit" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-sm font-bold shadow-lg transition">Publicar na Ardis TV</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: GERENCIAR EPISÓDIOS DA SÉRIE NO CATÁLOGO (LORENZO) -->
   <div id="series-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="bg-[#1c1c1c] w-full max-w-2xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
       
@@ -395,8 +602,6 @@
       </div>
 
       <div class="p-6 overflow-y-auto space-y-6 flex-1">
-        
-        <!-- ADICIONAR NOVO EPISÓDIO -->
         <form id="add-episode-form" class="bg-[#242424] p-4 rounded-xl border border-gray-700 space-y-3">
           <h4 class="text-sm font-bold text-netflixRed flex items-center gap-1.5">
             <i class="fa-solid fa-plus-circle"></i> Adicionar Novo Episódio
@@ -408,7 +613,7 @@
               <input type="text" id="ep-title" required placeholder="Ex: Episódio 1 - O Início" class="w-full px-3 py-2 bg-[#181818] text-white rounded-md text-sm border border-gray-700 focus:outline-none focus:border-netflixRed">
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-gray-300 uppercase mb-1">Link do YouTube do Episódio</label>
+              <label class="block text-[11px] font-semibold text-gray-300 uppercase mb-1">Link do YouTube</label>
               <input type="url" id="ep-youtube" required placeholder="https://youtube.com/watch?v=..." class="w-full px-3 py-2 bg-[#181818] text-white rounded-md text-sm border border-gray-700 focus:outline-none focus:border-netflixRed">
             </div>
           </div>
@@ -418,28 +623,23 @@
           </button>
         </form>
 
-        <!-- HISTÓRICO / LISTA DE EPISÓDIOS EXISTENTES -->
         <div>
           <h4 class="text-sm font-bold mb-3 flex items-center gap-2">
             <i class="fa-solid fa-list-ol text-gray-400"></i>
             <span>Lista de Episódios Cadastrados</span>
           </h4>
-          
-          <div id="episodes-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-            <!-- Renderizado dinamicamente -->
-          </div>
+          <div id="episodes-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
         </div>
-
       </div>
 
     </div>
   </div>
 
-  <!-- MODAL: PLAYER DE VÍDEO (ASSISTIR) -->
+
+  <!-- MODAL: PLAYER DE VÍDEO DO CATÁLOGO PRINCIPAL -->
   <div id="player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-black/95 backdrop-blur-md hidden">
     <div class="bg-[#141414] w-full max-w-4xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[95vh]">
       
-      <!-- PLAYER HEADER -->
       <div class="px-6 py-3 border-b border-gray-800 flex items-center justify-between bg-[#0c0c0c]">
         <div class="flex items-center gap-3">
           <span id="player-type-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-netflixRed text-white uppercase">
@@ -454,30 +654,27 @@
         </button>
       </div>
 
-      <!-- IFRAME CONTAINER (ASPECT 16:9) -->
       <div class="relative w-full aspect-video bg-black flex items-center justify-center">
         <iframe id="youtube-iframe" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
 
-      <!-- SEÇÃO INFERIOR PARA SÉRIES (SELETOR DE EPISÓDIOS) -->
       <div id="player-episodes-section" class="p-4 bg-[#181818] border-t border-gray-800 overflow-y-auto hidden">
         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-[#E50914] fa-layer-group"></i> Seleção de Episódios
+          <i class="fa-solid fa-layer-group text-netflixRed"></i> Seleção de Episódios
         </h4>
-        <div id="player-episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-          <!-- Botoes de episodios dinamicos -->
-        </div>
+        <div id="player-episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
       </div>
 
     </div>
   </div>
 
-  <script type="module">
-    // Importações do Firebase SDK JS v10
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, get, child, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configuração do Firebase fornecida pelo usuário
+  <!-- JAVASCRIPT DE LÓGICA E FIREBASE SDK v10 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, get, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Credenciais do Firebase Realtime Database
     const firebaseConfig = {
       apiKey: "AIzaSyAC3rVfSywrK9Np-C716c06tontayUkfng",
       authDomain: "lbeta-72136.firebaseapp.com",
@@ -489,16 +686,17 @@
       measurementId: "G-X67J0333LR"
     };
 
-    // Inicialização do Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Estado Global do Aplicativo
+    // Estado da Aplicação
     let currentUser = null;
+    let ardisUser = null;
     let fullCatalog = [];
+    let ardisScheduleList = [];
     let currentSeriesEditingId = null;
 
-    // Toast Alert System
+    // Sistema de Alerta Toast
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -506,18 +704,18 @@
       const bgColors = {
         success: 'bg-emerald-600',
         error: 'bg-netflixRed',
-        info: 'bg-blue-600',
+        info: 'bg-purple-600',
         warning: 'bg-amber-600'
       };
 
       const icons = {
         success: 'fa-circle-check',
         error: 'fa-circle-exclamation',
-        info: 'fa-circle-info',
+        info: 'fa-satellite-dish',
         warning: 'fa-triangle-exclamation'
       };
 
-      toast.className = `${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto min-w-[280px]`;
+      toast.className = `${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto min-w-[280px] z-50`;
       toast.innerHTML = `
         <i class="fa-solid ${icons[type]} text-lg"></i>
         <span class="text-sm font-semibold flex-1">${message}</span>
@@ -535,7 +733,7 @@
       }, 4000);
     }
 
-    // Helper: Extrair Embed ID do YouTube
+    // Helpers do YouTube
     function extractYouTubeEmbedUrl(url) {
       if (!url) return '';
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -543,12 +741,11 @@
       if (match && match[2].length === 11) {
         return `https://www.youtube.com/embed/${match[2]}?autoplay=1`;
       }
-      return url; // fallback caso ja seja embed
+      return url;
     }
 
-    // Helper: Gerar Thumbnail do YouTube se não houver capa
     function getYouTubeThumbnail(url) {
-      if (!url) return 'https://placehold.co/400x600/181818/ffffff?text=Sem+Capa';
+      if (!url) return 'https://placehold.co/400x600/181818/ffffff?text=L';
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
       if (match && match[2].length === 11) {
@@ -557,8 +754,8 @@
       return 'https://placehold.co/400x600/181818/ffffff?text=L';
     }
 
-    
-    // Alternar Telas de Login / Registro
+
+    // AUTENTICAÇÃO PRINCIPAL (PLATAFORMA L)
     document.getElementById('btn-show-register').addEventListener('click', () => {
       document.getElementById('login-form').classList.add('hidden');
       document.getElementById('register-form').classList.remove('hidden');
@@ -569,7 +766,6 @@
       document.getElementById('login-form').classList.remove('hidden');
     });
 
-    // Formatar CPF
     document.getElementById('reg-cpf').addEventListener('input', (e) => {
       let v = e.target.value.replace(/\D/g, '');
       v = v.replace(/(\d{3})(\d)/, '$1.$2');
@@ -578,7 +774,7 @@
       e.target.value = v;
     });
 
-    // CADASTRO DE USUÁRIO NO FIREBASE REALTIME DATABASE
+    // Cadastro Plataforma L
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('reg-username').value.trim();
@@ -593,7 +789,6 @@
       const userKey = username.toLowerCase();
 
       try {
-        // Verificar se usuário já existe
         const userRef = ref(db, `users/${userKey}`);
         const snapshot = await get(userRef);
 
@@ -602,7 +797,6 @@
           return;
         }
 
-        // Salvar usuário no nó `users/{username_clean}`
         await set(userRef, {
           username: username,
           password: password,
@@ -616,11 +810,11 @@
 
       } catch (err) {
         console.error(err);
-        showToast('Erro ao criar conta no banco de dados.', 'error');
+        showToast('Erro ao criar conta no Firebase.', 'error');
       }
     });
 
-    // LOGIN DE USUÁRIO
+    // Login Plataforma L
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-username').value.trim();
@@ -649,19 +843,17 @@
           return;
         }
 
-        // Sucesso no login
         loginUser(userData.username);
 
       } catch (err) {
         console.error(err);
-        showToast('Erro ao realizar login no Firebase.', 'error');
+        showToast('Erro ao realizar login.', 'error');
       }
     });
 
-    // Função de Ativação da Sessão de Usuário
     function loginUser(username) {
       currentUser = username;
-      sessionStorage.setItem('netflix_user', username);
+      sessionStorage.setItem('l_user', username);
 
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
@@ -671,26 +863,31 @@
       document.getElementById('hero-username-text').innerText = username;
       document.getElementById('user-avatar-initial').innerText = username.charAt(0).toUpperCase();
 
-      // Verificar se é o usuário "Lorenzo" (independente de maiúsculas/minúsculas)
       const isLorenzo = username.toLowerCase() === 'lorenzo';
 
       if (isLorenzo) {
         document.getElementById('btn-upload-content').classList.remove('hidden');
         document.getElementById('btn-upload-content').classList.add('flex');
         document.getElementById('lorenzo-notice').classList.remove('hidden');
+        document.getElementById('btn-ardis-admin-post').classList.remove('hidden');
+        document.getElementById('btn-ardis-admin-post').classList.add('flex');
       } else {
         document.getElementById('btn-upload-content').classList.add('hidden');
         document.getElementById('lorenzo-notice').classList.add('hidden');
+        document.getElementById('btn-ardis-admin-post').classList.add('hidden');
       }
 
       showToast(`Bem-vindo, ${username}!`, 'success');
       listenToCatalog();
+      listenToArdisSchedule();
     }
 
-    // LOGOUT
+    // Logout
     document.getElementById('btn-logout').addEventListener('click', () => {
       currentUser = null;
-      sessionStorage.removeItem('netflix_user');
+      ardisUser = null;
+      sessionStorage.removeItem('l_user');
+      sessionStorage.removeItem('ardis_user');
       document.getElementById('main-app').classList.add('hidden');
       document.getElementById('main-app').classList.remove('flex');
       document.getElementById('auth-screen').classList.remove('hidden');
@@ -698,7 +895,272 @@
     });
 
 
-    // ESCUTAR O CATÁLOGO EM TEMPO REAL NO FIREBASE (`catalog/`)
+    // LÓGICA DE NAVEGAÇÃO ENTRE CATÁLOGO L E ARDIS TV
+    const catalogView = document.getElementById('catalog-view');
+    const ardisTvView = document.getElementById('ardis-tv-view');
+    const navSearchContainer = document.getElementById('nav-search-container');
+
+    function showCatalogView() {
+      ardisTvView.classList.add('hidden');
+      catalogView.classList.remove('hidden');
+      navSearchContainer.classList.remove('hidden');
+    }
+
+    function showArdisTvView() {
+      catalogView.classList.add('hidden');
+      navSearchContainer.classList.add('hidden');
+      ardisTvView.classList.remove('hidden');
+
+      // Verificar se já logou na Ardis TV
+      const savedArdisUser = sessionStorage.getItem('ardis_user');
+      if (savedArdisUser || (currentUser && currentUser.toLowerCase() === 'lorenzo')) {
+        const nameToUse = savedArdisUser || currentUser;
+        enterArdisDashboard(nameToUse);
+      } else {
+        document.getElementById('ardis-auth-card').classList.remove('hidden');
+        document.getElementById('ardis-content-card').classList.add('hidden');
+      }
+    }
+
+    document.getElementById('btn-toggle-ardis').addEventListener('click', showArdisTvView);
+    document.getElementById('hero-btn-ardis').addEventListener('click', showArdisTvView);
+    document.getElementById('btn-back-to-catalog').addEventListener('click', showCatalogView);
+    document.getElementById('nav-logo-home').addEventListener('click', showCatalogView);
+
+
+    // AUTENTICAÇÃO E CADASTRO PRÓPRIO DA ARDIS TV (`ardis_users/`)
+    document.getElementById('ardis-auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('ardis-input-name').value.trim();
+      const password = document.getElementById('ardis-input-password').value.trim();
+
+      if (!name || !password) {
+        showToast('Preencha seu nome e senha da Ardis TV!', 'warning');
+        return;
+      }
+
+      const ardisUserKey = name.toLowerCase().replace(/\s+/g, '_');
+
+      try {
+        const ardisUserRef = ref(db, `ardis_users/${ardisUserKey}`);
+        const snapshot = await get(ardisUserRef);
+
+        if (!snapshot.exists()) {
+          // Criar novo usuário Ardis TV no Firebase Realtime Database
+          await set(ardisUserRef, {
+            fullName: name,
+            password: password,
+            createdAt: Date.now()
+          });
+          showToast('Conta Ardis TV criada com sucesso!', 'success');
+        } else {
+          // Verificar senha
+          const existingData = snapshot.val();
+          if (existingData.password !== password) {
+            showToast('Senha da Ardis TV incorreta!', 'error');
+            return;
+          }
+        }
+
+        sessionStorage.setItem('ardis_user', name);
+        enterArdisDashboard(name);
+
+      } catch (err) {
+        console.error(err);
+        showToast('Erro no banco de dados da Ardis TV.', 'error');
+      }
+    });
+
+    function enterArdisDashboard(name) {
+      ardisUser = name;
+      document.getElementById('ardis-auth-card').classList.add('hidden');
+      document.getElementById('ardis-content-card').classList.remove('hidden');
+      document.getElementById('ardis-user-display-name').innerText = name;
+
+      // Se for o Lorenzo, habilita botão de postar na Ardis TV
+      if (currentUser && currentUser.toLowerCase() === 'lorenzo') {
+        document.getElementById('btn-ardis-admin-post').classList.remove('hidden');
+        document.getElementById('btn-ardis-admin-post').classList.add('flex');
+      }
+
+      showToast(`Sintonizado na Ardis TV como ${name}!`, 'info');
+    }
+
+
+    // ESCUTAR A PROGRAMAÇÃO DA ARDIS TV EM TEMPO REAL (`ardis_schedule/`)
+    function listenToArdisSchedule() {
+      const scheduleRef = ref(db, 'ardis_schedule');
+      onValue(scheduleRef, (snapshot) => {
+        ardisScheduleList = [];
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          Object.keys(data).forEach(id => {
+            ardisScheduleList.push({ id, ...data[id] });
+          });
+        }
+        renderArdisSchedule(ardisScheduleList);
+      });
+    }
+
+    function renderArdisSchedule(items) {
+      const grid = document.getElementById('ardis-schedule-grid');
+      const emptyState = document.getElementById('ardis-schedule-empty');
+      const countLabel = document.getElementById('ardis-schedule-count');
+
+      grid.innerHTML = '';
+      countLabel.innerText = `${items.length} ${items.length === 1 ? 'atrativo' : 'atrações'}`;
+
+      if (items.length === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+
+      const isLorenzo = currentUser && currentUser.toLowerCase() === 'lorenzo';
+
+      items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'bg-ardisDark/90 rounded-xl overflow-hidden border border-purple-900/40 p-3 flex flex-col justify-between hover:border-purple-500 transition shadow-lg relative group';
+
+        const posterUrl = item.posterUrl || getYouTubeThumbnail(item.youtubeUrl);
+
+        card.innerHTML = `
+          <div>
+            <div class="relative w-full aspect-video rounded-lg overflow-hidden bg-black mb-3">
+              <img src="${posterUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <span class="absolute top-2 left-2 rating-badge rating-${item.rating || 'L'}">
+                ${item.rating || 'L'}
+              </span>
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                <button class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition">
+                  <i class="fa-solid fa-play ml-0.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-bold px-2 py-0.5 bg-purple-900/80 text-purple-200 rounded border border-purple-700/50 uppercase truncate">
+                <i class="fa-regular fa-clock mr-1"></i>${item.statusTime || 'Em breve'}
+              </span>
+            </div>
+
+            <h4 class="font-bold text-sm text-white truncate group-hover:text-purple-300 transition">${item.title}</h4>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-purple-900/30 flex items-center justify-between">
+            <button class="btn-play-ardis w-full py-1.5 bg-purple-600/20 hover:bg-purple-600 text-purple-200 hover:text-white rounded text-xs font-bold transition flex items-center justify-center gap-1.5 border border-purple-500/30">
+              <i class="fa-solid fa-tv text-xs"></i> Assistir na Ardis TV
+            </button>
+
+            ${isLorenzo ? `
+              <button data-ardis-id="${item.id}" class="btn-delete-ardis ml-2 px-2 py-1 bg-red-900/40 hover:bg-netflixRed text-red-300 hover:text-white rounded text-xs transition border border-red-800/50" title="Excluir Atração">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            ` : ''}
+          </div>
+        `;
+
+        // Evento para reproduzir no player da Ardis TV
+        card.querySelector('.btn-play-ardis').addEventListener('click', () => {
+          playInArdisPlayer(item);
+        });
+
+        // Evento para Lorenzo excluir
+        if (isLorenzo) {
+          const deleteBtn = card.querySelector('.btn-delete-ardis');
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', async (e) => {
+              e.stopPropagation();
+              try {
+                await remove(ref(db, `ardis_schedule/${item.id}`));
+                showToast('Atração removida da Ardis TV!', 'info');
+              } catch (err) {
+                showToast('Erro ao excluir atração.', 'error');
+              }
+            });
+          }
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    function playInArdisPlayer(item) {
+      const iframe = document.getElementById('ardis-player-iframe');
+      const placeholder = document.getElementById('ardis-player-placeholder');
+      const title = document.getElementById('ardis-now-playing-title');
+      const timeBadge = document.getElementById('ardis-now-playing-time');
+
+      title.innerText = item.title;
+      timeBadge.innerText = item.statusTime || 'TRANSMITINDO';
+
+      placeholder.classList.add('hidden');
+      iframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
+
+      // Scroll suave até o player
+      document.getElementById('ardis-content-card').scrollIntoView({ behavior: 'smooth' });
+    }
+
+
+    // PAINEL DE ADMIN DO LORENZO PARA ARDIS TV (`ardis_schedule/`)
+    const ardisPostModal = document.getElementById('ardis-post-modal');
+
+    document.getElementById('btn-ardis-admin-post').addEventListener('click', () => {
+      document.getElementById('ardis-post-form').reset();
+      ardisPostModal.classList.remove('hidden');
+    });
+
+    document.querySelectorAll('.close-ardis-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        ardisPostModal.classList.add('hidden');
+      });
+    });
+
+    document.getElementById('ardis-post-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!currentUser || currentUser.toLowerCase() !== 'lorenzo') {
+        showToast('Apenas o Lorenzo pode postar na Ardis TV!', 'error');
+        return;
+      }
+
+      const title = document.getElementById('ardis-post-title').value.trim();
+      const statusTime = document.getElementById('ardis-post-time').value.trim();
+      const rating = document.getElementById('ardis-post-rating').value;
+      const youtubeUrl = document.getElementById('ardis-post-youtube').value.trim();
+      const posterUrl = document.getElementById('ardis-post-poster').value.trim();
+
+      if (!title || !youtubeUrl) {
+        showToast('Preencha o título e o link do YouTube!', 'warning');
+        return;
+      }
+
+      try {
+        const newScheduleRef = push(ref(db, 'ardis_schedule'));
+        await set(newScheduleRef, {
+          title,
+          statusTime,
+          rating,
+          youtubeUrl,
+          posterUrl: posterUrl || '',
+          createdBy: currentUser,
+          createdAt: Date.now()
+        });
+
+        showToast('Atração publicada com sucesso na Ardis TV!', 'success');
+        ardisPostModal.classList.add('hidden');
+
+      } catch (err) {
+        console.error(err);
+        showToast('Erro ao salvar no banco de dados da Ardis TV.', 'error');
+      }
+    });
+
+
+    // ESCUTAR CATÁLOGO PRINCIPAL DA PLATAFORMA L (`catalog/`)
     function listenToCatalog() {
       const catalogRef = ref(db, 'catalog');
       onValue(catalogRef, (snapshot) => {
@@ -713,13 +1175,11 @@
       });
     }
 
-    // Pesquisa em tempo real por primeira letra ou palavra
     const searchInput = document.getElementById('search-input');
     const clearSearchBtn = document.getElementById('clear-search');
 
     searchInput.addEventListener('input', () => {
-      const val = searchInput.value;
-      if (val.length > 0) {
+      if (searchInput.value.length > 0) {
         clearSearchBtn.classList.remove('hidden');
       } else {
         clearSearchBtn.classList.add('hidden');
@@ -739,12 +1199,10 @@
 
       return fullCatalog.filter(item => {
         const title = item.title.toLowerCase();
-        // Filtra por letra inicial ou substring
         return title.startsWith(query) || title.includes(query);
       });
     }
 
-    // RENDERIZAR GRÁFICO DO CATÁLOGO
     function renderCatalog(items) {
       const grid = document.getElementById('catalog-grid');
       const emptyState = document.getElementById('empty-state');
@@ -772,22 +1230,18 @@
         const isSeries = item.type === 'series';
 
         card.innerHTML = `
-          <!-- Poster -->
           <div class="relative w-full aspect-[2/3] bg-black/50 overflow-hidden">
             <img src="${posterUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x600/181818/ffffff?text=L'">
             
-            <!-- Type Badge -->
             <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-black/70 backdrop-blur-md border border-white/10 text-white">
               <i class="fa-solid ${isSeries ? 'fa-tv text-netflixRed' : 'fa-film text-netflixRed'} mr-1"></i>
               ${isSeries ? 'Série' : 'Filme'}
             </span>
 
-            <!-- Rating Badge -->
             <span class="absolute top-2 right-2 rating-badge rating-${item.rating || 'L'}">
               ${item.rating || 'L'}
             </span>
 
-            <!-- Hover Play Overlay -->
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center gap-2">
               <button class="w-12 h-12 rounded-full bg-netflixRed text-white flex items-center justify-center text-lg shadow-xl hover:scale-110 transition">
                 <i class="fa-solid fa-play ml-1"></i>
@@ -795,7 +1249,6 @@
             </div>
           </div>
 
-          <!-- Info Footer -->
           <div class="p-3 flex-1 flex flex-col justify-between bg-[#181818]">
             <div>
               <h4 class="font-bold text-sm text-white truncate group-hover:text-netflixRed transition">${item.title}</h4>
@@ -806,15 +1259,13 @@
 
             ${isLorenzo && isSeries ? `
               <button data-series-id="${item.id}" class="btn-manage-series mt-3 w-full py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-semibold rounded border border-gray-600 text-amber-400 flex items-center justify-center gap-1 transition">
-                <i class="fa-solid fa-[#E50914] fa-gear"></i> Gerenciar Episódios
+                <i class="fa-solid fa-gear"></i> Gerenciar Episódios
               </button>
             ` : ''}
           </div>
         `;
 
-        // Evento de clique para assistir
         card.addEventListener('click', (e) => {
-          // Se clicou no botão de gerenciar episódios, previne abrir player
           if (e.target.closest('.btn-manage-series')) return;
           openPlayerModal(item);
         });
@@ -822,7 +1273,6 @@
         grid.appendChild(card);
       });
 
-      // Event Listeners para botões de gerenciamento de série do Lorenzo
       if (isLorenzo) {
         document.querySelectorAll('.btn-manage-series').forEach(btn => {
           btn.addEventListener('click', (e) => {
@@ -835,7 +1285,7 @@
     }
 
 
-    // MODAIS MANAGEMENT
+    // ENVIAR CONTEÚDO PARA O CATÁLOGO PRINCIPAL (LORENZO)
     const uploadModal = document.getElementById('upload-modal');
     const seriesModal = document.getElementById('series-modal');
     const playerModal = document.getElementById('player-modal');
@@ -852,11 +1302,9 @@
       uploadModal.classList.remove('hidden');
     });
 
-    // Alternar visibilidade de aviso caso selecione Série no Upload
     document.querySelectorAll('input[name="content-type"]').forEach(radio => {
       radio.addEventListener('change', (e) => {
-        const isSeries = e.target.value === 'series';
-        if (isSeries) {
+        if (e.target.value === 'series') {
           document.getElementById('series-yt-note').classList.remove('hidden');
         } else {
           document.getElementById('series-yt-note').classList.add('hidden');
@@ -864,12 +1312,11 @@
       });
     });
 
-    // SUBMIT DO FORMULÁRIO DE ENVIO DE CONTEÚDO (LORENZO)
     document.getElementById('upload-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       if (!currentUser || currentUser.toLowerCase() !== 'lorenzo') {
-        showToast('Apenas o usuário Lorenzo pode enviar vídeos!', 'error');
+        showToast('Apenas o Lorenzo pode enviar vídeos!', 'error');
         return;
       }
 
@@ -886,7 +1333,6 @@
 
       try {
         const newCatalogRef = push(ref(db, 'catalog'));
-        const catalogId = newCatalogRef.key;
 
         const payload = {
           title,
@@ -898,7 +1344,6 @@
           createdAt: Date.now()
         };
 
-        // Se for série e tiver URL, cria o 1º episódio por padrão
         if (type === 'series' && youtubeUrl) {
           payload.episodes = {
             ep_1: {
@@ -911,7 +1356,7 @@
 
         await set(newCatalogRef, payload);
 
-        showToast(`${type === 'series' ? 'Série' : 'Filme'} cadastrado com sucesso!`, 'success');
+        showToast(`${type === 'series' ? 'Série' : 'Filme'} publicado no catálogo!`, 'success');
         uploadModal.classList.add('hidden');
 
       } catch (err) {
@@ -921,7 +1366,7 @@
     });
 
 
-    // ABRIR MODAL DE GERENCIAMENTO DE EPISÓDIOS DA SÉRIE
+    // GERENCIAR EPISÓDIOS DA SÉRIE
     async function openSeriesModal(seriesId) {
       currentSeriesEditingId = seriesId;
       const seriesRef = ref(db, `catalog/${seriesId}`);
@@ -937,7 +1382,6 @@
       seriesModal.classList.remove('hidden');
     }
 
-    // RENDERIZAR LISTA DE EPISÓDIOS CADASTRADOS
     function renderEpisodesList(episodes) {
       const container = document.getElementById('episodes-list');
       container.innerHTML = '';
@@ -968,7 +1412,7 @@
           try {
             await remove(ref(db, `catalog/${currentSeriesEditingId}/episodes/${epKey}`));
             showToast('Episódio removido.', 'info');
-            openSeriesModal(currentSeriesEditingId); // Recarregar modal
+            openSeriesModal(currentSeriesEditingId);
           } catch (err) {
             showToast('Erro ao deletar episódio.', 'error');
           }
@@ -978,7 +1422,6 @@
       });
     }
 
-    // ADICIONAR NOVO EPISÓDIO
     document.getElementById('add-episode-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentSeriesEditingId) return;
@@ -999,7 +1442,7 @@
           createdAt: Date.now()
         });
 
-        showToast('Episódio adicionado com sucesso!', 'success');
+        showToast('Episódio adicionado!', 'success');
         document.getElementById('add-episode-form').reset();
         openSeriesModal(currentSeriesEditingId);
 
@@ -1010,7 +1453,7 @@
     });
 
 
-    // ABRIR PLAYER DE VÍDEO
+    // PLAYER DE VÍDEO DO CATÁLOGO PRINCIPAL
     function openPlayerModal(item) {
       const iframe = document.getElementById('youtube-iframe');
       const titleLabel = document.getElementById('player-title');
@@ -1028,7 +1471,6 @@
         const episodes = item.episodes ? Object.values(item.episodes) : [];
 
         if (episodes.length > 0) {
-          // Toca o 1º episódio por padrão
           iframe.src = extractYouTubeEmbedUrl(episodes[0].youtubeUrl);
 
           episodes.forEach((ep, index) => {
@@ -1040,7 +1482,6 @@
             `;
 
             btn.addEventListener('click', () => {
-              // Atualizar botão ativo
               Array.from(episodesGrid.children).forEach(b => {
                 b.className = 'p-2.5 rounded-lg border border-gray-700 bg-[#222] text-gray-300 hover:border-gray-500 text-left text-xs font-semibold flex items-center justify-between transition';
               });
@@ -1057,7 +1498,6 @@
         }
 
       } else {
-        // É Filme
         episodesSection.classList.add('hidden');
         iframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
       }
@@ -1065,16 +1505,15 @@
       playerModal.classList.remove('hidden');
     }
 
-    // FECHAR PLAYER DE VÍDEO
     document.getElementById('close-player').addEventListener('click', () => {
       const iframe = document.getElementById('youtube-iframe');
-      iframe.src = ''; // Parar execução do vídeo
+      iframe.src = '';
       playerModal.classList.add('hidden');
     });
 
-    // VERIFICAR SESSÃO AO CARREGAR A PÁGINA
+    // RECUPERAR SESSÃO AO CARREGAR
     window.addEventListener('DOMContentLoaded', () => {
-      const savedUser = sessionStorage.getItem('netflix_user');
+      const savedUser = sessionStorage.getItem('l_user');
       if (savedUser) {
         loginUser(savedUser);
       }
