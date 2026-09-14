@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L</title>
+  <title>L - Catálogo de Filmes e Séries</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -82,7 +82,7 @@
     }
     .card-zoom:hover {
       transform: scale(1.05);
-      z-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     }
   </style>
 </head>
@@ -90,19 +90,20 @@
 
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
+  <!-- AUTHENTICATION SCREEN -->
   <div id="auth-screen" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/80 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/f8472e38-e3f6-4080-8323-0186c3214d0c/26063842-2236-4740-9a27-a9a3f2d01115/BR-pt-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay">
     
     <div class="w-full max-w-md bg-black/85 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-2xl border border-white/10">
       
       <!-- LOGO -->
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-black tracking-widest text-netflixRed uppercase drop-shadow-md">
-          <i class="fa-solid fa-[#E50914] fa-film mr-2"></i>L
+        <h1 class="text-4xl font-black tracking-widest text-netflixRed uppercase drop-shadow-md">
+          <i class="fa-solid fa-film mr-2 text-netflixRed"></i>L
         </h1>
         <p class="text-xs text-gray-400 mt-1">Seu catálogo de vídeos particular</p>
       </div>
 
-      <!-- TELA DE LOGIN -->
+      <!-- LOGIN FORM -->
       <form id="login-form" class="space-y-4">
         <h2 class="text-2xl font-bold mb-4">Entrar</h2>
         
@@ -140,7 +141,7 @@
         </div>
       </form>
 
-      <!-- TELA DE CADASTRO -->
+      <!-- REGISTER FORM (SEM CAMPO CPF) -->
       <form id="register-form" class="space-y-4 hidden">
         <h2 class="text-2xl font-bold mb-4">Criar Conta</h2>
         
@@ -164,16 +165,6 @@
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">CPF</label>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-              <i class="fa-solid fa-id-card text-sm"></i>
-            </span>
-            <input type="text" id="reg-cpf" required placeholder="000.000.000-00" maxlength="14" class="w-full pl-10 pr-4 py-3 bg-[#333] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed transition">
-          </div>
-        </div>
-
         <button type="submit" class="w-full py-3 bg-netflixRed hover:bg-netflixHover font-bold rounded-lg transition duration-200 shadow-lg text-white mt-2">
           Criar conta
         </button>
@@ -191,6 +182,7 @@
     </div>
   </div>
 
+  <!-- MAIN APPLICATION -->
   <div id="main-app" class="hidden flex-col min-h-screen">
     
     <!-- NAVBAR -->
@@ -301,7 +293,6 @@
     </footer>
 
   </div>
-
 
   <!-- MODAL: ENVIAR FILME / SÉRIE (EXCLUSIVO LORENZO) -->
   <div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
@@ -462,7 +453,7 @@
       <!-- SEÇÃO INFERIOR PARA SÉRIES (SELETOR DE EPISÓDIOS) -->
       <div id="player-episodes-section" class="p-4 bg-[#181818] border-t border-gray-800 overflow-y-auto hidden">
         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-[#E50914] fa-layer-group"></i> Seleção de Episódios
+          <i class="fa-solid fa-layer-group text-netflixRed"></i> Seleção de Episódios
         </h4>
         <div id="player-episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           <!-- Botoes de episodios dinamicos -->
@@ -475,9 +466,9 @@
   <script type="module">
     // Importações do Firebase SDK JS v10
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, get, child, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, set, get, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configuração do Firebase fornecida pelo usuário
+    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAC3rVfSywrK9Np-C716c06tontayUkfng",
       authDomain: "lbeta-72136.firebaseapp.com",
@@ -543,7 +534,7 @@
       if (match && match[2].length === 11) {
         return `https://www.youtube.com/embed/${match[2]}?autoplay=1`;
       }
-      return url; // fallback caso ja seja embed
+      return url;
     }
 
     // Helper: Gerar Thumbnail do YouTube se não houver capa
@@ -557,7 +548,6 @@
       return 'https://placehold.co/400x600/181818/ffffff?text=L';
     }
 
-    
     // Alternar Telas de Login / Registro
     document.getElementById('btn-show-register').addEventListener('click', () => {
       document.getElementById('login-form').classList.add('hidden');
@@ -569,23 +559,13 @@
       document.getElementById('login-form').classList.remove('hidden');
     });
 
-    // Formatar CPF
-    document.getElementById('reg-cpf').addEventListener('input', (e) => {
-      let v = e.target.value.replace(/\D/g, '');
-      v = v.replace(/(\d{3})(\d)/, '$1.$2');
-      v = v.replace(/(\d{3})(\d)/, '$1.$2');
-      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-      e.target.value = v;
-    });
-
-    // CADASTRO DE USUÁRIO NO FIREBASE REALTIME DATABASE
+    // CADASTRO DE USUÁRIO NO FIREBASE REALTIME DATABASE (Sem campo CPF)
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('reg-username').value.trim();
       const password = document.getElementById('reg-password').value.trim();
-      const cpf = document.getElementById('reg-cpf').value.trim();
 
-      if (!username || !password || !cpf) {
+      if (!username || !password) {
         showToast('Preencha todos os campos!', 'warning');
         return;
       }
@@ -606,7 +586,6 @@
         await set(userRef, {
           username: username,
           password: password,
-          cpf: cpf,
           createdAt: Date.now()
         });
 
@@ -697,7 +676,6 @@
       showToast('Você saiu da sua conta.', 'info');
     });
 
-
     // ESCUTAR O CATÁLOGO EM TEMPO REAL NO FIREBASE (`catalog/`)
     function listenToCatalog() {
       const catalogRef = ref(db, 'catalog');
@@ -739,7 +717,6 @@
 
       return fullCatalog.filter(item => {
         const title = item.title.toLowerCase();
-        // Filtra por letra inicial ou substring
         return title.startsWith(query) || title.includes(query);
       });
     }
@@ -806,7 +783,7 @@
 
             ${isLorenzo && isSeries ? `
               <button data-series-id="${item.id}" class="btn-manage-series mt-3 w-full py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-semibold rounded border border-gray-600 text-amber-400 flex items-center justify-center gap-1 transition">
-                <i class="fa-solid fa-[#E50914] fa-gear"></i> Gerenciar Episódios
+                <i class="fa-solid fa-gear text-netflixRed"></i> Gerenciar Episódios
               </button>
             ` : ''}
           </div>
@@ -814,7 +791,6 @@
 
         // Evento de clique para assistir
         card.addEventListener('click', (e) => {
-          // Se clicou no botão de gerenciar episódios, previne abrir player
           if (e.target.closest('.btn-manage-series')) return;
           openPlayerModal(item);
         });
@@ -833,7 +809,6 @@
         });
       }
     }
-
 
     // MODAIS MANAGEMENT
     const uploadModal = document.getElementById('upload-modal');
@@ -886,7 +861,6 @@
 
       try {
         const newCatalogRef = push(ref(db, 'catalog'));
-        const catalogId = newCatalogRef.key;
 
         const payload = {
           title,
@@ -919,7 +893,6 @@
         showToast('Erro ao salvar no banco de dados.', 'error');
       }
     });
-
 
     // ABRIR MODAL DE GERENCIAMENTO DE EPISÓDIOS DA SÉRIE
     async function openSeriesModal(seriesId) {
@@ -968,7 +941,7 @@
           try {
             await remove(ref(db, `catalog/${currentSeriesEditingId}/episodes/${epKey}`));
             showToast('Episódio removido.', 'info');
-            openSeriesModal(currentSeriesEditingId); // Recarregar modal
+            openSeriesModal(currentSeriesEditingId);
           } catch (err) {
             showToast('Erro ao deletar episódio.', 'error');
           }
@@ -1009,7 +982,6 @@
       }
     });
 
-
     // ABRIR PLAYER DE VÍDEO
     function openPlayerModal(item) {
       const iframe = document.getElementById('youtube-iframe');
@@ -1040,7 +1012,6 @@
             `;
 
             btn.addEventListener('click', () => {
-              // Atualizar botão ativo
               Array.from(episodesGrid.children).forEach(b => {
                 b.className = 'p-2.5 rounded-lg border border-gray-700 bg-[#222] text-gray-300 hover:border-gray-500 text-left text-xs font-semibold flex items-center justify-between transition';
               });
