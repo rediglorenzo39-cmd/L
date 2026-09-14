@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
@@ -81,7 +82,7 @@
     }
     .card-zoom:hover {
       transform: scale(1.05);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+      z-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     }
   </style>
 </head>
@@ -89,17 +90,16 @@
 
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
-  <!-- TELA DE AUTENTICAÇÃO -->
   <div id="auth-screen" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/80 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/f8472e38-e3f6-4080-8323-0186c3214d0c/26063842-2236-4740-9a27-a9a3f2d01115/BR-pt-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay">
     
     <div class="w-full max-w-md bg-black/85 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-2xl border border-white/10">
       
       <!-- LOGO -->
       <div class="text-center mb-8">
-        <h1 class="text-5xl font-black tracking-widest text-netflixRed uppercase drop-shadow-md">
-          L
+        <h1 class="text-3xl font-black tracking-widest text-netflixRed uppercase drop-shadow-md">
+          <i class="fa-solid fa-[#E50914] fa-film mr-2"></i>L
         </h1>
-        <p class="text-xs text-gray-400 mt-1">Sua plataforma de vídeos e TV online</p>
+        <p class="text-xs text-gray-400 mt-1">Seu catálogo de vídeos particular</p>
       </div>
 
       <!-- TELA DE LOGIN -->
@@ -140,7 +140,7 @@
         </div>
       </form>
 
-      <!-- TELA DE CADASTRO (SEM CPF) -->
+      <!-- TELA DE CADASTRO -->
       <form id="register-form" class="space-y-4 hidden">
         <h2 class="text-2xl font-bold mb-4">Criar Conta</h2>
         
@@ -164,6 +164,16 @@
           </div>
         </div>
 
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">CPF</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+              <i class="fa-solid fa-id-card text-sm"></i>
+            </span>
+            <input type="text" id="reg-cpf" required placeholder="000.000.000-00" maxlength="14" class="w-full pl-10 pr-4 py-3 bg-[#333] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed transition">
+          </div>
+        </div>
+
         <button type="submit" class="w-full py-3 bg-netflixRed hover:bg-netflixHover font-bold rounded-lg transition duration-200 shadow-lg text-white mt-2">
           Criar conta
         </button>
@@ -181,32 +191,20 @@
     </div>
   </div>
 
-  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="main-app" class="hidden flex-col min-h-screen">
     
     <!-- NAVBAR -->
     <header class="sticky top-0 z-30 bg-netflixHeader/95 backdrop-blur-md border-b border-white/5 px-4 md:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
       
-      <!-- Logo & Navegação de Abas -->
+      <!-- Logo & Brand -->
       <div class="flex items-center space-x-6">
-        <span class="text-3xl font-black tracking-wider text-netflixRed uppercase cursor-pointer select-none">
+        <span class="text-2xl font-black tracking-wider text-netflixRed uppercase cursor-pointer select-none">
           L
         </span>
-
-        <nav class="flex items-center space-x-2 bg-[#222] p-1 rounded-xl border border-gray-800 text-xs font-bold">
-          <button id="nav-tab-catalog" class="px-4 py-1.5 rounded-lg bg-netflixRed text-white transition flex items-center gap-1.5">
-            <i class="fa-solid fa-film"></i>
-            <span>Catálogo</span>
-          </button>
-          <button id="nav-tab-ardis" class="px-4 py-1.5 rounded-lg text-gray-400 hover:text-white transition flex items-center gap-1.5">
-            <i class="fa-solid fa-tv"></i>
-            <span>Ardis TV</span>
-          </button>
-        </nav>
       </div>
 
-      <!-- Barra de Pesquisa (Visível apenas na aba Catálogo) -->
-      <div id="search-container" class="flex-1 max-w-md mx-auto w-full">
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-md mx-auto w-full">
         <div class="relative">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none">
             <i class="fa-solid fa-magnifying-glass text-sm"></i>
@@ -218,22 +216,16 @@
         </div>
       </div>
 
-      <!-- Ações & Perfil -->
+      <!-- Action Buttons & User Menu -->
       <div class="flex items-center space-x-3">
         
-        <!-- Botão Especial Enviar Filme / Série (Aba Catálogo - Lorenzo) -->
+        <!-- Botão Especial de Enviar Filme / Série (Exclusivo para Lorenzo) -->
         <button id="btn-upload-content" class="hidden bg-netflixRed hover:bg-netflixHover text-white px-4 py-2 rounded-lg font-bold text-sm items-center gap-2 shadow-lg transition duration-200">
           <i class="fa-solid fa-plus"></i>
           <span>Enviar Filme / Série</span>
         </button>
 
-        <!-- Botão Especial Agendar Programação (Aba Ardis TV - Lorenzo) -->
-        <button id="btn-schedule-ardis" class="hidden bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-bold text-sm items-center gap-2 shadow-lg transition duration-200">
-          <i class="fa-solid fa-calendar-plus"></i>
-          <span>Agendar Ardis TV</span>
-        </button>
-
-        <!-- Badge de Perfil -->
+        <!-- Profile Badge -->
         <div class="flex items-center bg-[#222] px-3 py-1.5 rounded-full border border-gray-700">
           <div class="w-7 h-7 rounded-full bg-netflixRed flex items-center justify-center font-bold text-xs mr-2">
             <span id="user-avatar-initial">U</span>
@@ -249,108 +241,76 @@
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
       
-      <!-- ABA 1: CATÁLOGO L -->
-      <section id="view-catalog">
-        <div id="welcome-banner" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-red-900/40 via-black to-black p-6 md:p-10 mb-8 border border-white/5 shadow-2xl">
-          <div class="max-w-2xl relative z-10">
-            <span class="inline-block bg-netflixRed text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-              Catálogo Online
-            </span>
-            <h2 class="text-3xl md:text-5xl font-black leading-tight mb-2">
-              Bem-vindo, <span id="hero-username-text" class="text-netflixRed">Jogador</span>!
-            </h2>
-            <p class="text-gray-300 text-sm md:text-base">
-              Assista aos seus filmes e séries favoritos salvos em tempo real no L.
-            </p>
-          </div>
-        </div>
-
-        <div id="lorenzo-notice" class="hidden bg-gradient-to-r from-red-950/60 to-black border-l-4 border-netflixRed p-4 rounded-r-xl mb-6 shadow-md">
-          <div class="flex items-center">
-            <i class="fa-solid fa-crown text-amber-400 text-xl mr-3"></i>
-            <div>
-              <h4 class="font-bold text-sm text-amber-400">Conta Admin Detectada (Lorenzo)</h4>
-              <p class="text-xs text-gray-300">Você pode publicar filmes, séries, gerenciar episódios e agendar arquivos de vídeo na Ardis TV!</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-6 flex items-center justify-between">
-          <h3 id="catalog-title" class="text-xl md:text-2xl font-bold flex items-center gap-2">
-            <i class="fa-solid fa-fire text-netflixRed"></i>
-            <span>Catálogo Completo</span>
-          </h3>
-          <span id="catalog-count" class="text-xs text-gray-400 font-medium bg-[#222] px-3 py-1 rounded-full">
-            0 itens
+      <!-- HERO BANNER BIENVENIDA -->
+      <div id="welcome-banner" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-red-900/40 via-black to-black p-6 md:p-10 mb-8 border border-white/5 shadow-2xl">
+        <div class="max-w-2xl relative z-10">
+          <span class="inline-block bg-netflixRed text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+            Catálogo Online
           </span>
+          <h2 class="text-3xl md:text-5xl font-black leading-tight mb-2">
+            Bem-vindo, <span id="hero-username-text" class="text-netflixRed">Jogador</span>!
+          </h2>
+          <p class="text-gray-300 text-sm md:text-base">
+            Assista aos seus filmes e séries favoritos salvos em tempo real. Digite qualquer letra na barra de pesquisa para filtrar o catálogo!
+          </p>
         </div>
+        <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 bg-gradient-to-l from-netflixRed to-transparent pointer-events-none hidden md:block"></div>
+      </div>
 
-        <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"></div>
-
-        <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center text-gray-400">
-          <div class="w-16 h-16 rounded-full bg-[#222] flex items-center justify-center mb-4 text-2xl text-gray-500">
-            <i class="fa-solid fa-film"></i>
-          </div>
-          <h4 class="text-lg font-bold text-white mb-1">Nenhum título encontrado</h4>
-          <p class="text-sm max-w-sm">Tente pesquisar por outra letra ou aguarde novos lançamentos!</p>
-        </div>
-      </section>
-
-      <!-- ABA 2: ARDIS TV -->
-      <section id="view-ardis" class="hidden space-y-8">
-        
-        <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-purple-950/60 via-black to-black p-6 md:p-8 border border-purple-500/20 shadow-2xl">
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <span class="inline-flex items-center gap-1.5 bg-purple-600 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> TRANSMISSÃO ARDIS TV
-              </span>
-              <h2 class="text-3xl md:text-4xl font-black">Programação ao Vivo e Agendada</h2>
-              <p class="text-gray-300 text-sm mt-1">
-                Os vídeos só são liberados para assistir exatamente no horário configurado (Horário de Brasília).
-              </p>
-            </div>
-            <div class="bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-purple-500/30 text-right">
-              <span class="text-[10px] text-gray-400 uppercase font-semibold block">Horário de Brasília</span>
-              <span id="brasilia-clock" class="text-xl font-mono font-bold text-purple-400">00:00:00</span>
-            </div>
+      <!-- MENSAGEM QUANDO LORENZO LOGAR -->
+      <div id="lorenzo-notice" class="hidden bg-gradient-to-r from-red-950/60 to-black border-l-4 border-netflixRed p-4 rounded-r-xl mb-6 shadow-md">
+        <div class="flex items-center">
+          <i class="fa-solid fa-crown text-amber-400 text-xl mr-3"></i>
+          <div>
+            <h4 class="font-bold text-sm text-amber-400">Conta Admin Detectada (Lorenzo)</h4>
+            <p class="text-xs text-gray-300">Você possui privilégios para enviar novos filmes, criar séries e gerenciar episódios!</p>
           </div>
         </div>
+      </div>
 
-        <div>
-          <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-calendar-days text-purple-400"></i>
-            <span>Próximas Transmissões e Arquivos</span>
-          </h3>
-          
-          <div id="ardis-schedule-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <!-- RESULTADOS DA PESQUISA / SEÇÃO DE CONTEÚDO -->
+      <div class="mb-6 flex items-center justify-between">
+        <h3 id="catalog-title" class="text-xl md:text-2xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-fire text-netflixRed"></i>
+          <span>Catálogo Completo</span>
+        </h3>
+        <span id="catalog-count" class="text-xs text-gray-400 font-medium bg-[#222] px-3 py-1 rounded-full">
+          0 itens
+        </span>
+      </div>
 
-          <div id="ardis-empty-state" class="hidden flex-col items-center justify-center py-16 text-center text-gray-400 bg-[#181818] rounded-2xl border border-gray-800">
-            <i class="fa-solid fa-tv text-4xl mb-3 text-purple-400"></i>
-            <h4 class="text-lg font-bold text-white">Nenhum programa agendado</h4>
-            <p class="text-sm text-gray-400">Aguarde o Lorenzo agendar os novos vídeos na Ardis TV!</p>
-          </div>
+      <!-- CATALOG GRID -->
+      <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        <!-- Cards serão renderizados via JavaScript -->
+      </div>
+
+      <!-- ESTADO VAZIO -->
+      <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center text-gray-400">
+        <div class="w-16 h-16 rounded-full bg-[#222] flex items-center justify-center mb-4 text-2xl text-gray-500">
+          <i class="fa-solid fa-film"></i>
         </div>
-
-      </section>
+        <h4 class="text-lg font-bold text-white mb-1">Nenhum título encontrado</h4>
+        <p class="text-sm max-w-sm">Tente pesquisar por outra letra ou peça ao Lorenzo para cadastrar novos títulos!</p>
+      </div>
 
     </main>
 
+    <!-- FOOTER -->
     <footer class="mt-auto border-t border-white/5 bg-black py-6 text-center text-xs text-gray-500">
-      <p>L &bull; Ardis TV &copy; 2026 - Conectado ao Firebase</p>
+      <p>L &copy; 2026 - Conectado ao Firebase Realtime Database</p>
     </footer>
 
   </div>
 
 
-  <!-- MODAL: ENVIAR FILME / SÉRIE -->
+  <!-- MODAL: ENVIAR FILME / SÉRIE (EXCLUSIVO LORENZO) -->
   <div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="bg-[#1c1c1c] w-full max-w-lg rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
       
       <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#111]">
         <h3 class="text-lg font-bold text-white flex items-center gap-2">
           <i class="fa-solid fa-cloud-arrow-up text-netflixRed"></i>
-          <span>Enviar Novo Conteúdo para o L</span>
+          <span>Enviar Novo Conteúdo</span>
         </h3>
         <button class="close-modal text-gray-400 hover:text-white transition">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -359,6 +319,7 @@
 
       <form id="upload-form" class="p-6 space-y-4 overflow-y-auto flex-1">
         
+        <!-- TIPO DE CONTEÚDO -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-2">Tipo de Conteúdo</label>
           <div class="grid grid-cols-2 gap-3">
@@ -377,11 +338,13 @@
           </div>
         </div>
 
+        <!-- NOME DO FILME / SÉRIE -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Nome do Filme ou Série</label>
           <input type="text" id="content-title" required placeholder="Ex: Homem-Aranha, Stranger Things..." class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
         </div>
 
+        <!-- CLASSIFICAÇÃO INDICATIVA -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Classificação Indicativa</label>
           <select id="content-rating" required class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
@@ -394,95 +357,37 @@
           </select>
         </div>
 
+        <!-- LINK DO YOUTUBE -->
         <div id="youtube-link-container">
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link do Vídeo do YouTube</label>
           <input type="url" id="content-youtube" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
+          <p id="series-yt-note" class="text-xs text-gray-400 mt-1 hidden">*(Para séries, este link será o vídeo do 1º episódio ou trailer inicial)*</p>
         </div>
 
+        <!-- CAPA / POSTER (OPCIONAL) -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link da Imagem da Capa (Opcional)</label>
           <input type="url" id="content-poster" placeholder="https://exemplo.com/imagem.jpg" class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
+          <span class="text-[10px] text-gray-400">Se deixar em branco, geraremos uma capa automática com o estilo do YouTube!</span>
         </div>
 
         <div class="pt-4 border-t border-gray-800 flex justify-end gap-3">
           <button type="button" class="close-modal px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">Cancelar</button>
-          <button type="submit" class="px-6 py-2 bg-netflixRed hover:bg-netflixHover text-white rounded-lg text-sm font-bold shadow-lg transition">Publicar</button>
+          <button type="submit" class="px-6 py-2 bg-netflixRed hover:bg-netflixHover text-white rounded-lg text-sm font-bold shadow-lg transition">Publicar no Banco</button>
         </div>
 
       </form>
     </div>
   </div>
 
-
-  <!-- MODAL: AGENDAR VÍDEO ARDIS TV (LORENZO - COM UPLOAD DE ARQUIVO) -->
-  <div id="ardis-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
-    <div class="bg-[#1c1c1c] w-full max-w-lg rounded-2xl shadow-2xl border border-purple-500/30 overflow-hidden flex flex-col max-h-[90vh]">
-      
-      <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#111]">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-tv text-purple-400"></i>
-          <span>Agendar Transmissão na Ardis TV</span>
-        </h3>
-        <button class="close-modal text-gray-400 hover:text-white transition">
-          <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-      </div>
-
-      <form id="ardis-form" class="p-6 space-y-4 overflow-y-auto flex-1">
-        
-        <div>
-          <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Título da Atração / Vídeo</label>
-          <input type="text" id="ardis-title" required placeholder="Ex: Filme Especial das 20h" class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Data da Transmissão</label>
-            <input type="date" id="ardis-date" required class="w-full px-3 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Horário (Brasília)</label>
-            <input type="time" id="ardis-time" required class="w-full px-3 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
-          </div>
-        </div>
-
-        <!-- UPLOAD DIRETO DO ARQUIVO DE VÍDEO -->
-        <div class="bg-[#242424] p-4 rounded-xl border border-gray-700 space-y-2">
-          <label class="block text-xs font-bold text-purple-400 uppercase">
-            <i class="fa-solid fa-file-video mr-1"></i> Selecionar Arquivo de Vídeo (MP4, WEBM)
-          </label>
-          <input type="file" id="ardis-video-file" accept="video/*" class="w-full text-xs text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer">
-          <p class="text-[10px] text-gray-400">O arquivo será enviado para o Firebase Storage.</p>
-        </div>
-
-        <!-- UPLOAD DE CAPA -->
-        <div class="bg-[#242424] p-4 rounded-xl border border-gray-700 space-y-2">
-          <label class="block text-xs font-bold text-gray-300 uppercase">
-            <i class="fa-solid fa-image mr-1"></i> Imagem de Capa (Opcional)
-          </label>
-          <input type="file" id="ardis-poster-file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gray-700 file:text-white cursor-pointer">
-        </div>
-
-        <div class="pt-4 border-t border-gray-800 flex justify-end gap-3">
-          <button type="button" class="close-modal px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">Cancelar</button>
-          <button type="submit" id="btn-submit-ardis" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-bold shadow-lg transition flex items-center gap-2">
-            <span>Salvar Transmissão</span>
-          </button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-
-
-  <!-- MODAL: GERENCIAR SÉRIE -->
+  <!-- MODAL: GERENCIAR EPISÓDIOS DA SÉRIE (EXCLUSIVO LORENZO) -->
   <div id="series-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="bg-[#1c1c1c] w-full max-w-2xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
       
       <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#111]">
         <div>
           <h3 id="series-modal-title" class="text-lg font-bold text-white">Gerenciar Série</h3>
-          <p class="text-xs text-gray-400">Adicione episódios na série</p>
+          <p class="text-xs text-gray-400">Adicione ou edite episódios</p>
         </div>
         <button class="close-modal text-gray-400 hover:text-white transition">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -491,6 +396,7 @@
 
       <div class="p-6 overflow-y-auto space-y-6 flex-1">
         
+        <!-- ADICIONAR NOVO EPISÓDIO -->
         <form id="add-episode-form" class="bg-[#242424] p-4 rounded-xl border border-gray-700 space-y-3">
           <h4 class="text-sm font-bold text-netflixRed flex items-center gap-1.5">
             <i class="fa-solid fa-plus-circle"></i> Adicionar Novo Episódio
@@ -512,12 +418,16 @@
           </button>
         </form>
 
+        <!-- HISTÓRICO / LISTA DE EPISÓDIOS EXISTENTES -->
         <div>
           <h4 class="text-sm font-bold mb-3 flex items-center gap-2">
             <i class="fa-solid fa-list-ol text-gray-400"></i>
             <span>Lista de Episódios Cadastrados</span>
           </h4>
-          <div id="episodes-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+          
+          <div id="episodes-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+            <!-- Renderizado dinamicamente -->
+          </div>
         </div>
 
       </div>
@@ -525,18 +435,18 @@
     </div>
   </div>
 
-
-  <!-- MODAL: PLAYER DE VÍDEO -->
+  <!-- MODAL: PLAYER DE VÍDEO (ASSISTIR) -->
   <div id="player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-black/95 backdrop-blur-md hidden">
     <div class="bg-[#141414] w-full max-w-4xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[95vh]">
       
+      <!-- PLAYER HEADER -->
       <div class="px-6 py-3 border-b border-gray-800 flex items-center justify-between bg-[#0c0c0c]">
         <div class="flex items-center gap-3">
           <span id="player-type-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-netflixRed text-white uppercase">
-            Vídeo
+            Filme
           </span>
           <h3 id="player-title" class="text-base md:text-lg font-bold text-white truncate max-w-md">
-            Assistir
+            Assistir Vídeo
           </h3>
         </div>
         <button id="close-player" class="text-gray-400 hover:text-white transition p-1">
@@ -544,44 +454,30 @@
         </button>
       </div>
 
-      <!-- PLAYER CONTAINER -->
-      <div class="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden">
-        
-        <!-- YOUTUBE IFRAME -->
-        <iframe id="youtube-iframe" class="w-full h-full border-0 hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        
-        <!-- NATIVE VIDEO PLAYER (PARA ARQUIVOS DO ARDIS TV / FIREBASE STORAGE) -->
-        <video id="native-video-player" controls class="w-full h-full hidden"></video>
-
-        <!-- AVISO DE VÍDEO BLOQUEADO POR HORÁRIO DA ARDIS TV -->
-        <div id="ardis-time-lock" class="hidden flex-col items-center justify-center p-6 text-center bg-purple-950/90 text-white inset-0 absolute backdrop-blur-md">
-          <i class="fa-solid fa-clock text-5xl mb-3 text-purple-400 animate-pulse"></i>
-          <h3 class="text-2xl font-black mb-1">TRANSMISSÃO AGENDADA</h3>
-          <p id="ardis-lock-msg" class="text-sm text-purple-200 max-w-md">
-            Este vídeo só irá passar em tal horário, em Brasília.
-          </p>
-        </div>
-
+      <!-- IFRAME CONTAINER (ASPECT 16:9) -->
+      <div class="relative w-full aspect-video bg-black flex items-center justify-center">
+        <iframe id="youtube-iframe" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
 
+      <!-- SEÇÃO INFERIOR PARA SÉRIES (SELETOR DE EPISÓDIOS) -->
       <div id="player-episodes-section" class="p-4 bg-[#181818] border-t border-gray-800 overflow-y-auto hidden">
         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-layer-group text-netflixRed"></i> Seleção de Episódios
+          <i class="fa-solid fa-[#E50914] fa-layer-group"></i> Seleção de Episódios
         </h4>
-        <div id="player-episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+        <div id="player-episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+          <!-- Botoes de episodios dinamicos -->
+        </div>
       </div>
 
     </div>
   </div>
 
-
-  <!-- FIREBASE SCRIPTS -->
   <script type="module">
+    // Importações do Firebase SDK JS v10
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, get, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+    import { getDatabase, ref, set, get, child, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configuração do Firebase
+    // Configuração do Firebase fornecida pelo usuário
     const firebaseConfig = {
       apiKey: "AIzaSyAC3rVfSywrK9Np-C716c06tontayUkfng",
       authDomain: "lbeta-72136.firebaseapp.com",
@@ -593,15 +489,16 @@
       measurementId: "G-X67J0333LR"
     };
 
+    // Inicialização do Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const storage = getStorage(app);
 
+    // Estado Global do Aplicativo
     let currentUser = null;
     let fullCatalog = [];
     let currentSeriesEditingId = null;
 
-    // Toast Notification System
+    // Toast Alert System
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -613,21 +510,32 @@
         warning: 'bg-amber-600'
       };
 
+      const icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-exclamation',
+        info: 'fa-circle-info',
+        warning: 'fa-triangle-exclamation'
+      };
+
       toast.className = `${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto min-w-[280px]`;
       toast.innerHTML = `
-        <i class="fa-solid fa-circle-info text-lg"></i>
+        <i class="fa-solid ${icons[type]} text-lg"></i>
         <span class="text-sm font-semibold flex-1">${message}</span>
       `;
 
       container.appendChild(toast);
-      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
       setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-y-2');
         setTimeout(() => toast.remove(), 300);
       }, 4000);
     }
 
-    // Helper Youtube Embed Link
+    // Helper: Extrair Embed ID do YouTube
     function extractYouTubeEmbedUrl(url) {
       if (!url) return '';
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -635,9 +543,10 @@
       if (match && match[2].length === 11) {
         return `https://www.youtube.com/embed/${match[2]}?autoplay=1`;
       }
-      return url;
+      return url; // fallback caso ja seja embed
     }
 
+    // Helper: Gerar Thumbnail do YouTube se não houver capa
     function getYouTubeThumbnail(url) {
       if (!url) return 'https://placehold.co/400x600/181818/ffffff?text=Sem+Capa';
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -648,7 +557,8 @@
       return 'https://placehold.co/400x600/181818/ffffff?text=L';
     }
 
-    // Troca de Telas Login / Cadastro
+    
+    // Alternar Telas de Login / Registro
     document.getElementById('btn-show-register').addEventListener('click', () => {
       document.getElementById('login-form').classList.add('hidden');
       document.getElementById('register-form').classList.remove('hidden');
@@ -659,20 +569,31 @@
       document.getElementById('login-form').classList.remove('hidden');
     });
 
-    // CADASTRO (Apenas Usuário e Senha)
+    // Formatar CPF
+    document.getElementById('reg-cpf').addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      e.target.value = v;
+    });
+
+    // CADASTRO DE USUÁRIO NO FIREBASE REALTIME DATABASE
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('reg-username').value.trim();
       const password = document.getElementById('reg-password').value.trim();
+      const cpf = document.getElementById('reg-cpf').value.trim();
 
-      if (!username || !password) {
-        showToast('Preencha nome de usuário e senha!', 'warning');
+      if (!username || !password || !cpf) {
+        showToast('Preencha todos os campos!', 'warning');
         return;
       }
 
       const userKey = username.toLowerCase();
 
       try {
+        // Verificar se usuário já existe
         const userRef = ref(db, `users/${userKey}`);
         const snapshot = await get(userRef);
 
@@ -681,23 +602,25 @@
           return;
         }
 
+        // Salvar usuário no nó `users/{username_clean}`
         await set(userRef, {
           username: username,
           password: password,
+          cpf: cpf,
           createdAt: Date.now()
         });
 
-        showToast('Conta criada com sucesso!', 'success');
+        showToast('Conta criada com sucesso! Faça login.', 'success');
         document.getElementById('register-form').reset();
         document.getElementById('btn-show-login').click();
 
       } catch (err) {
         console.error(err);
-        showToast('Erro ao criar conta no Firebase.', 'error');
+        showToast('Erro ao criar conta no banco de dados.', 'error');
       }
     });
 
-    // LOGIN
+    // LOGIN DE USUÁRIO
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-username').value.trim();
@@ -720,19 +643,22 @@
         }
 
         const userData = snapshot.val();
+
         if (userData.password !== password) {
           showToast('Senha incorreta!', 'error');
           return;
         }
 
+        // Sucesso no login
         loginUser(userData.username);
 
       } catch (err) {
         console.error(err);
-        showToast('Erro ao fazer login.', 'error');
+        showToast('Erro ao realizar login no Firebase.', 'error');
       }
     });
 
+    // Função de Ativação da Sessão de Usuário
     function loginUser(username) {
       currentUser = username;
       sessionStorage.setItem('netflix_user', username);
@@ -745,70 +671,34 @@
       document.getElementById('hero-username-text').innerText = username;
       document.getElementById('user-avatar-initial').innerText = username.charAt(0).toUpperCase();
 
+      // Verificar se é o usuário "Lorenzo" (independente de maiúsculas/minúsculas)
       const isLorenzo = username.toLowerCase() === 'lorenzo';
 
       if (isLorenzo) {
         document.getElementById('btn-upload-content').classList.remove('hidden');
         document.getElementById('btn-upload-content').classList.add('flex');
-        document.getElementById('btn-schedule-ardis').classList.remove('hidden');
-        document.getElementById('btn-schedule-ardis').classList.add('flex');
         document.getElementById('lorenzo-notice').classList.remove('hidden');
+      } else {
+        document.getElementById('btn-upload-content').classList.add('hidden');
+        document.getElementById('lorenzo-notice').classList.add('hidden');
       }
 
       showToast(`Bem-vindo, ${username}!`, 'success');
       listenToCatalog();
-      listenToArdisSchedule();
-      startBrasiliaClock();
     }
 
+    // LOGOUT
     document.getElementById('btn-logout').addEventListener('click', () => {
       currentUser = null;
       sessionStorage.removeItem('netflix_user');
-      location.reload();
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('flex');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      showToast('Você saiu da sua conta.', 'info');
     });
 
-    // NAVEGAÇÃO DE ABAS (Catálogo / Ardis TV)
-    const tabCatalog = document.getElementById('nav-tab-catalog');
-    const tabArdis = document.getElementById('nav-tab-ardis');
-    const viewCatalog = document.getElementById('view-catalog');
-    const viewArdis = document.getElementById('view-ardis');
-    const searchContainer = document.getElementById('search-container');
 
-    tabCatalog.addEventListener('click', () => {
-      tabCatalog.className = 'px-4 py-1.5 rounded-lg bg-netflixRed text-white transition flex items-center gap-1.5';
-      tabArdis.className = 'px-4 py-1.5 rounded-lg text-gray-400 hover:text-white transition flex items-center gap-1.5';
-      viewCatalog.classList.remove('hidden');
-      viewArdis.classList.add('hidden');
-      searchContainer.classList.remove('hidden');
-    });
-
-    tabArdis.addEventListener('click', () => {
-      tabArdis.className = 'px-4 py-1.5 rounded-lg bg-purple-600 text-white transition flex items-center gap-1.5';
-      tabCatalog.className = 'px-4 py-1.5 rounded-lg text-gray-400 hover:text-white transition flex items-center gap-1.5';
-      viewArdis.classList.remove('hidden');
-      viewCatalog.classList.add('hidden');
-      searchContainer.classList.add('hidden');
-    });
-
-    // RELÓGIO HORÁRIO DE BRASÍLIA
-    function getBrasiliaDate() {
-      const now = new Date();
-      // Converter para o fuso horário de Brasília (America/Sao_Paulo)
-      const brasiliaStr = now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
-      return new Date(brasiliaStr);
-    }
-
-    function startBrasiliaClock() {
-      setInterval(() => {
-        const bDate = getBrasiliaDate();
-        const hours = String(bDate.getHours()).padStart(2, '0');
-        const minutes = String(bDate.getMinutes()).padStart(2, '0');
-        const seconds = String(bDate.getSeconds()).padStart(2, '0');
-        document.getElementById('brasilia-clock').innerText = `${hours}:${minutes}:${seconds}`;
-      }, 1000);
-    }
-
-    // LISTAR CATÁLOGO
+    // ESCUTAR O CATÁLOGO EM TEMPO REAL NO FIREBASE (`catalog/`)
     function listenToCatalog() {
       const catalogRef = ref(db, 'catalog');
       onValue(catalogRef, (snapshot) => {
@@ -823,31 +713,54 @@
       });
     }
 
+    // Pesquisa em tempo real por primeira letra ou palavra
     const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('input', () => renderCatalog(getFilteredCatalog()));
+    const clearSearchBtn = document.getElementById('clear-search');
+
+    searchInput.addEventListener('input', () => {
+      const val = searchInput.value;
+      if (val.length > 0) {
+        clearSearchBtn.classList.remove('hidden');
+      } else {
+        clearSearchBtn.classList.add('hidden');
+      }
+      renderCatalog(getFilteredCatalog());
+    });
+
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      clearSearchBtn.classList.add('hidden');
+      renderCatalog(getFilteredCatalog());
+    });
 
     function getFilteredCatalog() {
       const query = searchInput.value.toLowerCase().trim();
       if (!query) return fullCatalog;
+
       return fullCatalog.filter(item => {
         const title = item.title.toLowerCase();
+        // Filtra por letra inicial ou substring
         return title.startsWith(query) || title.includes(query);
       });
     }
 
+    // RENDERIZAR GRÁFICO DO CATÁLOGO
     function renderCatalog(items) {
       const grid = document.getElementById('catalog-grid');
       const emptyState = document.getElementById('empty-state');
       const countLabel = document.getElementById('catalog-count');
 
       grid.innerHTML = '';
-      countLabel.innerText = `${items.length} itens`;
+      countLabel.innerText = `${items.length} ${items.length === 1 ? 'item' : 'itens'}`;
 
       if (items.length === 0) {
         emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
         return;
       }
+
       emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
 
       const isLorenzo = currentUser && currentUser.toLowerCase() === 'lorenzo';
 
@@ -859,26 +772,49 @@
         const isSeries = item.type === 'series';
 
         card.innerHTML = `
+          <!-- Poster -->
           <div class="relative w-full aspect-[2/3] bg-black/50 overflow-hidden">
-            <img src="${posterUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-black/70 backdrop-blur-md text-white">
+            <img src="${posterUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x600/181818/ffffff?text=L'">
+            
+            <!-- Type Badge -->
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-black/70 backdrop-blur-md border border-white/10 text-white">
+              <i class="fa-solid ${isSeries ? 'fa-tv text-netflixRed' : 'fa-film text-netflixRed'} mr-1"></i>
               ${isSeries ? 'Série' : 'Filme'}
             </span>
+
+            <!-- Rating Badge -->
             <span class="absolute top-2 right-2 rating-badge rating-${item.rating || 'L'}">
               ${item.rating || 'L'}
             </span>
+
+            <!-- Hover Play Overlay -->
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center gap-2">
+              <button class="w-12 h-12 rounded-full bg-netflixRed text-white flex items-center justify-center text-lg shadow-xl hover:scale-110 transition">
+                <i class="fa-solid fa-play ml-1"></i>
+              </button>
+            </div>
           </div>
+
+          <!-- Info Footer -->
           <div class="p-3 flex-1 flex flex-col justify-between bg-[#181818]">
-            <h4 class="font-bold text-sm text-white truncate">${item.title}</h4>
+            <div>
+              <h4 class="font-bold text-sm text-white truncate group-hover:text-netflixRed transition">${item.title}</h4>
+              <p class="text-[11px] text-gray-400 mt-0.5">
+                ${isSeries ? `${item.episodes ? Object.keys(item.episodes).length : 1} Episódio(s)` : 'Filme Completo'}
+              </p>
+            </div>
+
             ${isLorenzo && isSeries ? `
-              <button data-series-id="${item.id}" class="btn-manage-series mt-2 w-full py-1 bg-gray-800 text-xs text-amber-400 font-semibold rounded border border-gray-700">
-                Gerenciar Episódios
+              <button data-series-id="${item.id}" class="btn-manage-series mt-3 w-full py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-semibold rounded border border-gray-600 text-amber-400 flex items-center justify-center gap-1 transition">
+                <i class="fa-solid fa-[#E50914] fa-gear"></i> Gerenciar Episódios
               </button>
             ` : ''}
           </div>
         `;
 
+        // Evento de clique para assistir
         card.addEventListener('click', (e) => {
+          // Se clicou no botão de gerenciar episódios, previne abrir player
           if (e.target.closest('.btn-manage-series')) return;
           openPlayerModal(item);
         });
@@ -886,261 +822,265 @@
         grid.appendChild(card);
       });
 
+      // Event Listeners para botões de gerenciamento de série do Lorenzo
       if (isLorenzo) {
         document.querySelectorAll('.btn-manage-series').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            openSeriesModal(btn.getAttribute('data-series-id'));
+            const seriesId = btn.getAttribute('data-series-id');
+            openSeriesModal(seriesId);
           });
         });
       }
     }
 
 
-    // AGENDAMENTO DA ARDIS TV
-    document.getElementById('btn-schedule-ardis').addEventListener('click', () => {
-      document.getElementById('ardis-form').reset();
-      document.getElementById('ardis-modal').classList.remove('hidden');
+    // MODAIS MANAGEMENT
+    const uploadModal = document.getElementById('upload-modal');
+    const seriesModal = document.getElementById('series-modal');
+    const playerModal = document.getElementById('player-modal');
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+        seriesModal.classList.add('hidden');
+      });
     });
 
-    document.getElementById('ardis-form').addEventListener('submit', async (e) => {
+    document.getElementById('btn-upload-content').addEventListener('click', () => {
+      document.getElementById('upload-form').reset();
+      uploadModal.classList.remove('hidden');
+    });
+
+    // Alternar visibilidade de aviso caso selecione Série no Upload
+    document.querySelectorAll('input[name="content-type"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const isSeries = e.target.value === 'series';
+        if (isSeries) {
+          document.getElementById('series-yt-note').classList.remove('hidden');
+        } else {
+          document.getElementById('series-yt-note').classList.add('hidden');
+        }
+      });
+    });
+
+    // SUBMIT DO FORMULÁRIO DE ENVIO DE CONTEÚDO (LORENZO)
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       if (!currentUser || currentUser.toLowerCase() !== 'lorenzo') {
-        showToast('Apenas o Lorenzo pode agendar transmissões!', 'error');
+        showToast('Apenas o usuário Lorenzo pode enviar vídeos!', 'error');
         return;
       }
 
-      const title = document.getElementById('ardis-title').value.trim();
-      const dateVal = document.getElementById('ardis-date').value;
-      const timeVal = document.getElementById('ardis-time').value;
-      const videoFile = document.getElementById('ardis-video-file').files[0];
-      const posterFile = document.getElementById('ardis-poster-file').files[0];
-
-      if (!title || !dateVal || !timeVal) {
-        showToast('Preencha título, data e horário!', 'warning');
-        return;
-      }
-
-      const btnSubmit = document.getElementById('btn-submit-ardis');
-      btnSubmit.disabled = true;
-      btnSubmit.innerText = "Enviando arquivo...";
-
-      try {
-        let videoUrl = '';
-        let posterUrl = '';
-
-        // Upload do arquivo de vídeo para o Firebase Storage
-        if (videoFile) {
-          const vRef = storageRef(storage, `ardis_videos/${Date.now()}_${videoFile.name}`);
-          await uploadBytes(vRef, videoFile);
-          videoUrl = await getDownloadURL(vRef);
-        }
-
-        // Upload da imagem de capa para o Firebase Storage
-        if (posterFile) {
-          const pRef = storageRef(storage, `ardis_posters/${Date.now()}_${posterFile.name}`);
-          await uploadBytes(pRef, posterFile);
-          posterUrl = await getDownloadURL(pRef);
-        }
-
-        // Converter Data e Hora para Timestamp considerando o Fuso de Brasília (-03:00)
-        const scheduledDateTimeStr = `${dateVal}T${timeVal}:00-03:00`;
-        const scheduledTimeMillis = new Date(scheduledDateTimeStr).getTime();
-
-        const newArdisRef = push(ref(db, 'ardis_schedule'));
-        await set(newArdisRef, {
-          title,
-          scheduledTimeMillis,
-          dateFormatted: dateVal,
-          timeFormatted: timeVal,
-          videoUrl,
-          posterUrl,
-          createdBy: currentUser,
-          createdAt: Date.now()
-        });
-
-        showToast('Transmissão da Ardis TV agendada com sucesso!', 'success');
-        document.getElementById('ardis-modal').classList.add('hidden');
-
-      } catch (err) {
-        console.error(err);
-        showToast('Erro ao salvar no Storage/Database.', 'error');
-      } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "Salvar Transmissão";
-      }
-    });
-
-
-    // ESCUTAR PROGRAMAÇÃO DA ARDIS TV EM TEMPO REAL
-    function listenToArdisSchedule() {
-      const ardisRef = ref(db, 'ardis_schedule');
-      onValue(ardisRef, (snapshot) => {
-        const grid = document.getElementById('ardis-schedule-grid');
-        const emptyState = document.getElementById('ardis-empty-state');
-        grid.innerHTML = '';
-
-        if (!snapshot.exists()) {
-          emptyState.classList.remove('hidden');
-          emptyState.classList.add('flex');
-          return;
-        }
-
-        emptyState.classList.add('hidden');
-        emptyState.classList.remove('flex');
-
-        const items = snapshot.val();
-        Object.keys(items).forEach(id => {
-          const item = items[id];
-          const card = document.createElement('div');
-          card.className = 'bg-[#181818] rounded-xl overflow-hidden border border-purple-500/20 shadow-lg flex flex-col justify-between';
-
-          const bNow = getBrasiliaDate().getTime();
-          const isReleased = bNow >= item.scheduledTimeMillis;
-
-          card.innerHTML = `
-            <div class="relative w-full aspect-video bg-black">
-              <img src="${item.posterUrl || 'https://placehold.co/600x400/181818/ffffff?text=Ardis+TV'}" class="w-full h-full object-cover opacity-80">
-              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-              <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold ${isReleased ? 'bg-emerald-600' : 'bg-purple-600'} text-white">
-                ${isReleased ? '● LIBERADO' : '⏳ AGENDADO'}
-              </span>
-            </div>
-            <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
-              <div>
-                <h4 class="font-bold text-lg text-white">${item.title}</h4>
-                <p class="text-xs text-purple-300 mt-1">
-                  <i class="fa-solid fa-clock mr-1"></i> Transmissão: ${item.dateFormatted} às ${item.timeFormatted} (Horário de Brasília)
-                </p>
-              </div>
-              <button class="btn-watch-ardis w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-xs shadow transition">
-                Assistir Transmissão
-              </button>
-            </div>
-          `;
-
-          card.querySelector('.btn-watch-ardis').addEventListener('click', () => {
-            openArdisPlayerModal(item);
-          });
-
-          grid.appendChild(card);
-        });
-      });
-    }
-
-    // ABRIR PLAYER ARDIS TV COM BLOQUEIO POR HORÁRIO
-    function openArdisPlayerModal(item) {
-      const ytIframe = document.getElementById('youtube-iframe');
-      const nativeVideo = document.getElementById('native-video-player');
-      const timeLock = document.getElementById('ardis-time-lock');
-      const lockMsg = document.getElementById('ardis-lock-msg');
-      const playerTitle = document.getElementById('player-title');
-      const playerBadge = document.getElementById('player-type-badge');
-      const epSection = document.getElementById('player-episodes-section');
-
-      epSection.classList.add('hidden');
-      playerTitle.innerText = item.title;
-      playerBadge.innerText = 'Ardis TV';
-
-      ytIframe.classList.add('hidden');
-      ytIframe.src = '';
-      nativeVideo.classList.add('hidden');
-      nativeVideo.src = '';
-
-      const bNow = getBrasiliaDate().getTime();
-      const isReleased = bNow >= item.scheduledTimeMillis;
-
-      if (!isReleased) {
-        timeLock.classList.remove('hidden');
-        timeLock.classList.add('flex');
-        lockMsg.innerText = `Este vídeo só irá passar às ${item.timeFormatted} do dia ${item.dateFormatted} (Horário de Brasília).`;
-      } else {
-        timeLock.classList.add('hidden');
-        timeLock.classList.remove('flex');
-
-        if (item.videoUrl) {
-          nativeVideo.src = item.videoUrl;
-          nativeVideo.classList.remove('hidden');
-          nativeVideo.play().catch(() => {});
-        } else {
-          showToast('Nenhum arquivo de vídeo encontrado.', 'error');
-        }
-      }
-
-      document.getElementById('player-modal').classList.remove('hidden');
-    }
-
-    // PLAYER PADRÃO (CATÁLOGO)
-    function openPlayerModal(item) {
-      const ytIframe = document.getElementById('youtube-iframe');
-      const nativeVideo = document.getElementById('native-video-player');
-      const timeLock = document.getElementById('ardis-time-lock');
-      const playerTitle = document.getElementById('player-title');
-      const playerBadge = document.getElementById('player-type-badge');
-
-      timeLock.classList.add('hidden');
-      nativeVideo.classList.add('hidden');
-      nativeVideo.src = '';
-
-      playerTitle.innerText = item.title;
-      playerBadge.innerText = item.type === 'series' ? 'Série' : 'Filme';
-
-      ytIframe.classList.remove('hidden');
-      ytIframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
-
-      document.getElementById('player-modal').classList.remove('hidden');
-    }
-
-    document.getElementById('close-player').addEventListener('click', () => {
-      document.getElementById('youtube-iframe').src = '';
-      document.getElementById('native-video-player').pause();
-      document.getElementById('player-modal').classList.add('hidden');
-    });
-
-    // FECHAR MODAIS
-    document.querySelectorAll('.close-modal').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('upload-modal').classList.add('hidden');
-        document.getElementById('ardis-modal').classList.add('hidden');
-        document.getElementById('series-modal').classList.add('hidden');
-      });
-    });
-
-    // ENVIAR NOVO CONTEÚDO CATÁLOGO
-    document.getElementById('btn-upload-content').addEventListener('click', () => {
-      document.getElementById('upload-form').reset();
-      document.getElementById('upload-modal').classList.remove('hidden');
-    });
-
-    document.getElementById('upload-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
       const type = document.querySelector('input[name="content-type"]:checked').value;
       const title = document.getElementById('content-title').value.trim();
       const rating = document.getElementById('content-rating').value;
       const youtubeUrl = document.getElementById('content-youtube').value.trim();
       const posterUrl = document.getElementById('content-poster').value.trim();
 
+      if (!title) {
+        showToast('Insira o nome do filme/série!', 'warning');
+        return;
+      }
+
       try {
-        const newRef = push(ref(db, 'catalog'));
-        await set(newRef, {
-          title, type, rating, youtubeUrl, posterUrl,
-          createdBy: currentUser, createdAt: Date.now()
-        });
-        showToast('Conteúdo publicado!', 'success');
-        document.getElementById('upload-modal').classList.add('hidden');
+        const newCatalogRef = push(ref(db, 'catalog'));
+        const catalogId = newCatalogRef.key;
+
+        const payload = {
+          title,
+          type,
+          rating,
+          youtubeUrl: youtubeUrl || '',
+          posterUrl: posterUrl || '',
+          createdBy: currentUser,
+          createdAt: Date.now()
+        };
+
+        // Se for série e tiver URL, cria o 1º episódio por padrão
+        if (type === 'series' && youtubeUrl) {
+          payload.episodes = {
+            ep_1: {
+              title: "Episódio 1 - Piloto",
+              youtubeUrl: youtubeUrl,
+              createdAt: Date.now()
+            }
+          };
+        }
+
+        await set(newCatalogRef, payload);
+
+        showToast(`${type === 'series' ? 'Série' : 'Filme'} cadastrado com sucesso!`, 'success');
+        uploadModal.classList.add('hidden');
+
       } catch (err) {
-        showToast('Erro ao publicar.', 'error');
+        console.error(err);
+        showToast('Erro ao salvar no banco de dados.', 'error');
       }
     });
 
-    // VERIFICAR SESSÃO AO CARREGAR
+
+    // ABRIR MODAL DE GERENCIAMENTO DE EPISÓDIOS DA SÉRIE
+    async function openSeriesModal(seriesId) {
+      currentSeriesEditingId = seriesId;
+      const seriesRef = ref(db, `catalog/${seriesId}`);
+      const snapshot = await get(seriesRef);
+
+      if (!snapshot.exists()) return;
+
+      const series = snapshot.val();
+      document.getElementById('series-modal-title').innerText = `Série: ${series.title}`;
+      
+      renderEpisodesList(series.episodes || {});
+      document.getElementById('add-episode-form').reset();
+      seriesModal.classList.remove('hidden');
+    }
+
+    // RENDERIZAR LISTA DE EPISÓDIOS CADASTRADOS
+    function renderEpisodesList(episodes) {
+      const container = document.getElementById('episodes-list');
+      container.innerHTML = '';
+
+      const keys = Object.keys(episodes);
+      if (keys.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum episódio cadastrado ainda.</p>`;
+        return;
+      }
+
+      keys.forEach(epKey => {
+        const ep = episodes[epKey];
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between p-2.5 bg-[#181818] rounded-lg border border-gray-800 text-xs';
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2 truncate pr-2">
+            <i class="fa-solid fa-play-circle text-netflixRed"></i>
+            <span class="font-semibold text-white truncate">${ep.title}</span>
+          </div>
+          <button data-ep-key="${epKey}" class="btn-delete-ep text-gray-500 hover:text-netflixRed transition p-1">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        `;
+
+        row.querySelector('.btn-delete-ep').addEventListener('click', async () => {
+          if (!currentSeriesEditingId) return;
+          try {
+            await remove(ref(db, `catalog/${currentSeriesEditingId}/episodes/${epKey}`));
+            showToast('Episódio removido.', 'info');
+            openSeriesModal(currentSeriesEditingId); // Recarregar modal
+          } catch (err) {
+            showToast('Erro ao deletar episódio.', 'error');
+          }
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    // ADICIONAR NOVO EPISÓDIO
+    document.getElementById('add-episode-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentSeriesEditingId) return;
+
+      const title = document.getElementById('ep-title').value.trim();
+      const youtubeUrl = document.getElementById('ep-youtube').value.trim();
+
+      if (!title || !youtubeUrl) {
+        showToast('Preencha título e link do YouTube!', 'warning');
+        return;
+      }
+
+      try {
+        const newEpRef = push(ref(db, `catalog/${currentSeriesEditingId}/episodes`));
+        await set(newEpRef, {
+          title,
+          youtubeUrl,
+          createdAt: Date.now()
+        });
+
+        showToast('Episódio adicionado com sucesso!', 'success');
+        document.getElementById('add-episode-form').reset();
+        openSeriesModal(currentSeriesEditingId);
+
+      } catch (err) {
+        console.error(err);
+        showToast('Erro ao salvar episódio.', 'error');
+      }
+    });
+
+
+    // ABRIR PLAYER DE VÍDEO
+    function openPlayerModal(item) {
+      const iframe = document.getElementById('youtube-iframe');
+      const titleLabel = document.getElementById('player-title');
+      const typeBadge = document.getElementById('player-type-badge');
+      const episodesSection = document.getElementById('player-episodes-section');
+      const episodesGrid = document.getElementById('player-episodes-grid');
+
+      titleLabel.innerText = item.title;
+      typeBadge.innerText = item.type === 'series' ? 'Série' : 'Filme';
+
+      if (item.type === 'series') {
+        episodesSection.classList.remove('hidden');
+        episodesGrid.innerHTML = '';
+
+        const episodes = item.episodes ? Object.values(item.episodes) : [];
+
+        if (episodes.length > 0) {
+          // Toca o 1º episódio por padrão
+          iframe.src = extractYouTubeEmbedUrl(episodes[0].youtubeUrl);
+
+          episodes.forEach((ep, index) => {
+            const btn = document.createElement('button');
+            btn.className = `p-2.5 rounded-lg border text-left text-xs font-semibold flex items-center justify-between transition ${index === 0 ? 'bg-netflixRed text-white border-netflixRed' : 'bg-[#222] text-gray-300 border-gray-700 hover:border-gray-500'}`;
+            btn.innerHTML = `
+              <span class="truncate">${ep.title}</span>
+              <i class="fa-solid fa-play text-[10px]"></i>
+            `;
+
+            btn.addEventListener('click', () => {
+              // Atualizar botão ativo
+              Array.from(episodesGrid.children).forEach(b => {
+                b.className = 'p-2.5 rounded-lg border border-gray-700 bg-[#222] text-gray-300 hover:border-gray-500 text-left text-xs font-semibold flex items-center justify-between transition';
+              });
+              btn.className = 'p-2.5 rounded-lg border border-netflixRed bg-netflixRed text-white text-left text-xs font-semibold flex items-center justify-between transition';
+
+              iframe.src = extractYouTubeEmbedUrl(ep.youtubeUrl);
+            });
+
+            episodesGrid.appendChild(btn);
+          });
+        } else {
+          iframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
+          episodesGrid.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum episódio listado.</p>`;
+        }
+
+      } else {
+        // É Filme
+        episodesSection.classList.add('hidden');
+        iframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
+      }
+
+      playerModal.classList.remove('hidden');
+    }
+
+    // FECHAR PLAYER DE VÍDEO
+    document.getElementById('close-player').addEventListener('click', () => {
+      const iframe = document.getElementById('youtube-iframe');
+      iframe.src = ''; // Parar execução do vídeo
+      playerModal.classList.add('hidden');
+    });
+
+    // VERIFICAR SESSÃO AO CARREGAR A PÁGINA
     window.addEventListener('DOMContentLoaded', () => {
       const savedUser = sessionStorage.getItem('netflix_user');
       if (savedUser) {
         loginUser(savedUser);
       }
     });
+
   </script>
 </body>
 </html>
+```
