@@ -1,10 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L - Catálogo de Filmes e Séries</title>
+  <title>L - Plataforma de Vídeos</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -62,48 +61,67 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 6px;
       color: white;
       text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      flex-shrink: 0;
     }
     .rating-L { background-color: #00a859; }
     .rating-10 { background-color: #00a3e0; }
     .rating-12 { background-color: #ffcc00; color: #000; text-shadow: none; }
     .rating-14 { background-color: #e67817; }
     .rating-16 { background-color: #e20613; }
-    .rating-18 { background-color: #000000; border: 1px solid #e20613; }
+    .rating-18 { background-color: #000000; border: 1.5px solid #e20613; }
 
     .card-zoom {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card-zoom:hover {
-      transform: scale(1.05);
+      transform: scale(1.04);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(229, 9, 20, 0.4)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(229, 9, 20, 0.8)); }
+    }
+    .animate-pulse-glow {
+      animation: pulseGlow 2s infinite ease-in-out;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-netflixDark text-white antialiased">
 
+  <!-- TELA DE CARREGAMENTO (SPLASH SCREEN 100% PRETA) -->
+  <div id="loading-screen" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="flex flex-col items-center text-center p-6">
+      <img src="https://cdn.phototourl.com/free/2026-09-14-39a9939b-74b4-4cc3-9f1e-53f15b53805c.png" alt="L Logo" class="w-32 md:w-44 object-contain mb-8 animate-pulse-glow">
+      <div class="flex items-center gap-3 bg-[#111] px-5 py-2.5 rounded-full border border-white/10 shadow-lg">
+        <i class="fa-solid fa-circle-notch fa-spin text-netflixRed text-lg"></i>
+        <span class="text-sm font-bold tracking-wider text-gray-200">Carregando...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
-  <!-- AUTHENTICATION SCREEN -->
+  <!-- TELA DE AUTENTICAÇÃO -->
   <div id="auth-screen" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/80 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/f8472e38-e3f6-4080-8323-0186c3214d0c/26063842-2236-4740-9a27-a9a3f2d01115/BR-pt-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay">
     
     <div class="w-full max-w-md bg-black/85 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-2xl border border-white/10">
       
-      <!-- LOGO -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-black tracking-widest text-netflixRed uppercase drop-shadow-md">
-          <i class="fa-solid fa-film mr-2 text-netflixRed"></i>L
-        </h1>
-        <p class="text-xs text-gray-400 mt-1">Seu catálogo de vídeos particular</p>
+      <!-- LOGO NA AUTENTICAÇÃO -->
+      <div class="text-center mb-8 flex flex-col items-center">
+        <img src="https://cdn.phototourl.com/free/2026-09-14-39a9939b-74b4-4cc3-9f1e-53f15b53805c.png" alt="L Logo" class="h-16 object-contain mb-2">
+        <p class="text-xs text-gray-400">Seu catálogo de vídeos particular</p>
       </div>
 
-      <!-- LOGIN FORM -->
+      <!-- TELA DE LOGIN -->
       <form id="login-form" class="space-y-4">
         <h2 class="text-2xl font-bold mb-4">Entrar</h2>
         
@@ -141,7 +159,7 @@
         </div>
       </form>
 
-      <!-- REGISTER FORM (SEM CAMPO CPF) -->
+      <!-- TELA DE CADASTRO (SEM CPF) -->
       <form id="register-form" class="space-y-4 hidden">
         <h2 class="text-2xl font-bold mb-4">Criar Conta</h2>
         
@@ -182,20 +200,18 @@
     </div>
   </div>
 
-  <!-- MAIN APPLICATION -->
+  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="main-app" class="hidden flex-col min-h-screen">
     
     <!-- NAVBAR -->
     <header class="sticky top-0 z-30 bg-netflixHeader/95 backdrop-blur-md border-b border-white/5 px-4 md:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
       
-      <!-- Logo & Brand -->
+      <!-- Logo Oficial na Bar Navigation -->
       <div class="flex items-center space-x-6">
-        <span class="text-2xl font-black tracking-wider text-netflixRed uppercase cursor-pointer select-none">
-          L
-        </span>
+        <img src="https://cdn.phototourl.com/free/2026-09-14-39a9939b-74b4-4cc3-9f1e-53f15b53805c.png" alt="L Logo" class="h-9 object-contain cursor-pointer">
       </div>
 
-      <!-- Search Bar -->
+      <!-- Barra de Pesquisa -->
       <div class="flex-1 max-w-md mx-auto w-full">
         <div class="relative">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none">
@@ -208,16 +224,15 @@
         </div>
       </div>
 
-      <!-- Action Buttons & User Menu -->
+      <!-- Ações do Usuário -->
       <div class="flex items-center space-x-3">
-        
-        <!-- Botão Especial de Enviar Filme / Série (Exclusivo para Lorenzo) -->
+        <!-- Botão Especial Admin (Lorenzo) -->
         <button id="btn-upload-content" class="hidden bg-netflixRed hover:bg-netflixHover text-white px-4 py-2 rounded-lg font-bold text-sm items-center gap-2 shadow-lg transition duration-200">
           <i class="fa-solid fa-plus"></i>
           <span>Enviar Filme / Série</span>
         </button>
 
-        <!-- Profile Badge -->
+        <!-- Perfil -->
         <div class="flex items-center bg-[#222] px-3 py-1.5 rounded-full border border-gray-700">
           <div class="w-7 h-7 rounded-full bg-netflixRed flex items-center justify-center font-bold text-xs mr-2">
             <span id="user-avatar-initial">U</span>
@@ -227,13 +242,12 @@
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
-
       </div>
     </header>
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
       
-      <!-- HERO BANNER BIENVENIDA -->
+      <!-- HERO BANNER -->
       <div id="welcome-banner" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-red-900/40 via-black to-black p-6 md:p-10 mb-8 border border-white/5 shadow-2xl">
         <div class="max-w-2xl relative z-10">
           <span class="inline-block bg-netflixRed text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
@@ -243,24 +257,23 @@
             Bem-vindo, <span id="hero-username-text" class="text-netflixRed">Jogador</span>!
           </h2>
           <p class="text-gray-300 text-sm md:text-base">
-            Assista aos seus filmes e séries favoritos salvos em tempo real. Digite qualquer letra na barra de pesquisa para filtrar o catálogo!
+            Clique na capa de qualquer título para ver detalhes, foto expandida, classificação e assistir!
           </p>
         </div>
-        <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 bg-gradient-to-l from-netflixRed to-transparent pointer-events-none hidden md:block"></div>
       </div>
 
-      <!-- MENSAGEM QUANDO LORENZO LOGAR -->
+      <!-- PAINEL LORENZO -->
       <div id="lorenzo-notice" class="hidden bg-gradient-to-r from-red-950/60 to-black border-l-4 border-netflixRed p-4 rounded-r-xl mb-6 shadow-md">
         <div class="flex items-center">
           <i class="fa-solid fa-crown text-amber-400 text-xl mr-3"></i>
           <div>
-            <h4 class="font-bold text-sm text-amber-400">Conta Admin Detectada (Lorenzo)</h4>
-            <p class="text-xs text-gray-300">Você possui privilégios para enviar novos filmes, criar séries e gerenciar episódios!</p>
+            <h4 class="font-bold text-sm text-amber-400">Conta Admin (Lorenzo)</h4>
+            <p class="text-xs text-gray-300">Você possui permissão para cadastrar filmes, criar séries e gerenciar episódios.</p>
           </div>
         </div>
       </div>
 
-      <!-- RESULTADOS DA PESQUISA / SEÇÃO DE CONTEÚDO -->
+      <!-- TÍTULO SEÇÃO -->
       <div class="mb-6 flex items-center justify-between">
         <h3 id="catalog-title" class="text-xl md:text-2xl font-bold flex items-center gap-2">
           <i class="fa-solid fa-fire text-netflixRed"></i>
@@ -271,10 +284,8 @@
         </span>
       </div>
 
-      <!-- CATALOG GRID -->
-      <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-        <!-- Cards serão renderizados via JavaScript -->
-      </div>
+      <!-- GRID DO CATÁLOGO -->
+      <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"></div>
 
       <!-- ESTADO VAZIO -->
       <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center text-gray-400">
@@ -282,7 +293,7 @@
           <i class="fa-solid fa-film"></i>
         </div>
         <h4 class="text-lg font-bold text-white mb-1">Nenhum título encontrado</h4>
-        <p class="text-sm max-w-sm">Tente pesquisar por outra letra ou peça ao Lorenzo para cadastrar novos títulos!</p>
+        <p class="text-sm max-w-sm">Tente pesquisar por outra letra ou solicite novos títulos ao Lorenzo!</p>
       </div>
 
     </main>
@@ -294,7 +305,104 @@
 
   </div>
 
-  <!-- MODAL: ENVIAR FILME / SÉRIE (EXCLUSIVO LORENZO) -->
+
+  <!-- MODAL: DETALHES DO FILME/SÉRIE (FOTO GRANDE + NOME + CLASSIFICAÇÃO + BOTÃO ASSISTIR) -->
+  <div id="details-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md hidden">
+    <div class="bg-[#181818] w-full max-w-3xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- HEADER MODAL -->
+      <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#111]">
+        <span class="text-xs font-bold text-netflixRed uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-circle-info"></i> Detalhes do Título
+        </span>
+        <button id="close-details" class="text-gray-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <!-- CORPO DO MODAL -->
+      <div class="p-6 overflow-y-auto space-y-6">
+        
+        <!-- FOTO GRANDE COM NOME E CLASSIFICAÇÃO AO LADO -->
+        <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+          
+          <!-- Poster / Foto Grande -->
+          <div class="w-full sm:w-56 aspect-[2/3] bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10 flex-shrink-0">
+            <img id="detail-poster" src="" alt="Capa" class="w-full h-full object-cover">
+          </div>
+
+          <!-- Informações Principais -->
+          <div class="flex-1 space-y-4 text-center sm:text-left">
+            
+            <!-- Título + Classificação Indicativa Lado a Lado -->
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+              <h2 id="detail-title" class="text-2xl sm:text-3xl font-black text-white"></h2>
+              <span id="detail-rating-badge" class="rating-badge"></span>
+            </div>
+
+            <!-- Tipo e Info Extra -->
+            <div class="flex items-center justify-center sm:justify-start gap-3 text-xs text-gray-400">
+              <span id="detail-type-badge" class="px-2.5 py-1 rounded bg-netflixRed/20 text-netflixRed font-bold border border-netflixRed/30 uppercase"></span>
+              <span id="detail-episodes-count" class="bg-[#222] px-2.5 py-1 rounded text-gray-300"></span>
+            </div>
+
+            <!-- Seletor de Episódios (se for série) -->
+            <div id="detail-episodes-container" class="hidden space-y-2 pt-2 border-t border-gray-800">
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider text-left">
+                Selecione o Episódio:
+              </label>
+              <div id="detail-episodes-grid" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1">
+                <!-- Episódios renderizados via JS -->
+              </div>
+            </div>
+
+            <!-- BOTÃO GRANDE DE ASSISTIR -->
+            <div class="pt-4">
+              <button id="btn-start-watch" class="w-full sm:w-auto px-8 py-3.5 bg-netflixRed hover:bg-netflixHover text-white font-black text-base rounded-xl shadow-xl flex items-center justify-center gap-3 transition transform hover:scale-105">
+                <i class="fa-solid fa-play text-xl"></i>
+                <span>ASSISTIR AGORA</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL: PLAYER DE VÍDEO (QUADRADO DO YOUTUBE) -->
+  <div id="player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-black/95 backdrop-blur-md hidden">
+    <div class="bg-[#141414] w-full max-w-4xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[95vh]">
+      
+      <!-- HEADER DO PLAYER -->
+      <div class="px-6 py-3 border-b border-gray-800 flex items-center justify-between bg-[#0c0c0c]">
+        <div class="flex items-center gap-3">
+          <span id="player-type-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-netflixRed text-white uppercase">
+            Filme
+          </span>
+          <h3 id="player-title" class="text-base md:text-lg font-bold text-white truncate max-w-md">
+            Assistir Vídeo
+          </h3>
+        </div>
+        <button id="close-player" class="text-gray-400 hover:text-white transition p-1">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- FRAME VÍDEO YOUTUBE 16:9 -->
+      <div class="relative w-full aspect-video bg-black flex items-center justify-center">
+        <iframe id="youtube-iframe" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL: ENVIAR CONTEÚDO (EXCLUSIVO LORENZO) -->
   <div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="bg-[#1c1c1c] w-full max-w-lg rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
       
@@ -309,8 +417,6 @@
       </div>
 
       <form id="upload-form" class="p-6 space-y-4 overflow-y-auto flex-1">
-        
-        <!-- TIPO DE CONTEÚDO -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-2">Tipo de Conteúdo</label>
           <div class="grid grid-cols-2 gap-3">
@@ -329,13 +435,11 @@
           </div>
         </div>
 
-        <!-- NOME DO FILME / SÉRIE -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Nome do Filme ou Série</label>
           <input type="text" id="content-title" required placeholder="Ex: Homem-Aranha, Stranger Things..." class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
         </div>
 
-        <!-- CLASSIFICAÇÃO INDICATIVA -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Classificação Indicativa</label>
           <select id="content-rating" required class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
@@ -348,37 +452,32 @@
           </select>
         </div>
 
-        <!-- LINK DO YOUTUBE -->
-        <div id="youtube-link-container">
+        <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link do Vídeo do YouTube</label>
           <input type="url" id="content-youtube" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
-          <p id="series-yt-note" class="text-xs text-gray-400 mt-1 hidden">*(Para séries, este link será o vídeo do 1º episódio ou trailer inicial)*</p>
         </div>
 
-        <!-- CAPA / POSTER (OPCIONAL) -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">Link da Imagem da Capa (Opcional)</label>
           <input type="url" id="content-poster" placeholder="https://exemplo.com/imagem.jpg" class="w-full px-4 py-2.5 bg-[#2b2b2b] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-netflixRed">
-          <span class="text-[10px] text-gray-400">Se deixar em branco, geraremos uma capa automática com o estilo do YouTube!</span>
         </div>
 
         <div class="pt-4 border-t border-gray-800 flex justify-end gap-3">
           <button type="button" class="close-modal px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">Cancelar</button>
-          <button type="submit" class="px-6 py-2 bg-netflixRed hover:bg-netflixHover text-white rounded-lg text-sm font-bold shadow-lg transition">Publicar no Banco</button>
+          <button type="submit" class="px-6 py-2 bg-netflixRed hover:bg-netflixHover text-white rounded-lg text-sm font-bold shadow-lg transition">Publicar</button>
         </div>
-
       </form>
     </div>
   </div>
 
+
   <!-- MODAL: GERENCIAR EPISÓDIOS DA SÉRIE (EXCLUSIVO LORENZO) -->
   <div id="series-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="bg-[#1c1c1c] w-full max-w-2xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
-      
       <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#111]">
         <div>
           <h3 id="series-modal-title" class="text-lg font-bold text-white">Gerenciar Série</h3>
-          <p class="text-xs text-gray-400">Adicione ou edite episódios</p>
+          <p class="text-xs text-gray-400">Adicione ou remova episódios</p>
         </div>
         <button class="close-modal text-gray-400 hover:text-white transition">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -386,89 +485,42 @@
       </div>
 
       <div class="p-6 overflow-y-auto space-y-6 flex-1">
-        
-        <!-- ADICIONAR NOVO EPISÓDIO -->
         <form id="add-episode-form" class="bg-[#242424] p-4 rounded-xl border border-gray-700 space-y-3">
           <h4 class="text-sm font-bold text-netflixRed flex items-center gap-1.5">
             <i class="fa-solid fa-plus-circle"></i> Adicionar Novo Episódio
           </h4>
-          
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label class="block text-[11px] font-semibold text-gray-300 uppercase mb-1">Título do Episódio</label>
               <input type="text" id="ep-title" required placeholder="Ex: Episódio 1 - O Início" class="w-full px-3 py-2 bg-[#181818] text-white rounded-md text-sm border border-gray-700 focus:outline-none focus:border-netflixRed">
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-gray-300 uppercase mb-1">Link do YouTube do Episódio</label>
+              <label class="block text-[11px] font-semibold text-gray-300 uppercase mb-1">Link do YouTube</label>
               <input type="url" id="ep-youtube" required placeholder="https://youtube.com/watch?v=..." class="w-full px-3 py-2 bg-[#181818] text-white rounded-md text-sm border border-gray-700 focus:outline-none focus:border-netflixRed">
             </div>
           </div>
-
           <button type="submit" class="w-full py-2 bg-netflixRed hover:bg-netflixHover text-white text-xs font-bold rounded-lg transition shadow">
             Salvar Episódio
           </button>
         </form>
 
-        <!-- HISTÓRICO / LISTA DE EPISÓDIOS EXISTENTES -->
         <div>
           <h4 class="text-sm font-bold mb-3 flex items-center gap-2">
             <i class="fa-solid fa-list-ol text-gray-400"></i>
             <span>Lista de Episódios Cadastrados</span>
           </h4>
-          
-          <div id="episodes-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-            <!-- Renderizado dinamicamente -->
-          </div>
+          <div id="episodes-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
         </div>
-
       </div>
-
     </div>
   </div>
 
-  <!-- MODAL: PLAYER DE VÍDEO (ASSISTIR) -->
-  <div id="player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-black/95 backdrop-blur-md hidden">
-    <div class="bg-[#141414] w-full max-w-4xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[95vh]">
-      
-      <!-- PLAYER HEADER -->
-      <div class="px-6 py-3 border-b border-gray-800 flex items-center justify-between bg-[#0c0c0c]">
-        <div class="flex items-center gap-3">
-          <span id="player-type-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-netflixRed text-white uppercase">
-            Filme
-          </span>
-          <h3 id="player-title" class="text-base md:text-lg font-bold text-white truncate max-w-md">
-            Assistir Vídeo
-          </h3>
-        </div>
-        <button id="close-player" class="text-gray-400 hover:text-white transition p-1">
-          <i class="fa-solid fa-xmark text-2xl"></i>
-        </button>
-      </div>
 
-      <!-- IFRAME CONTAINER (ASPECT 16:9) -->
-      <div class="relative w-full aspect-video bg-black flex items-center justify-center">
-        <iframe id="youtube-iframe" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-
-      <!-- SEÇÃO INFERIOR PARA SÉRIES (SELETOR DE EPISÓDIOS) -->
-      <div id="player-episodes-section" class="p-4 bg-[#181818] border-t border-gray-800 overflow-y-auto hidden">
-        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-layer-group text-netflixRed"></i> Seleção de Episódios
-        </h4>
-        <div id="player-episodes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-          <!-- Botoes de episodios dinamicos -->
-        </div>
-      </div>
-
-    </div>
-  </div>
-
+  <!-- FIREBASE & LOGIC -->
   <script type="module">
-    // Importações do Firebase SDK JS v10
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, get, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, set, get, child, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAC3rVfSywrK9Np-C716c06tontayUkfng",
       authDomain: "lbeta-72136.firebaseapp.com",
@@ -480,53 +532,52 @@
       measurementId: "G-X67J0333LR"
     };
 
-    // Inicialização do Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Estado Global do Aplicativo
     let currentUser = null;
     let fullCatalog = [];
+    let currentSelectedItem = null;
+    let selectedEpisodeUrl = null;
     let currentSeriesEditingId = null;
+    let isLoadingHidden = false;
 
-    // Toast Alert System
+    // GERENCIADOR DA TELA DE CARREGAMENTO (PREVINE LOOP)
+    function hideLoadingScreen() {
+      if (isLoadingHidden) return;
+      isLoadingHidden = true;
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.classList.add('opacity-0');
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    // TRAVA DE SEGURANÇA CONTRA LOOP INFINITO (Carrega em no máximo 2.5s)
+    setTimeout(() => {
+      hideLoadingScreen();
+    }, 2500);
+
+    // Sistema de Toast
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
-      
-      const bgColors = {
-        success: 'bg-emerald-600',
-        error: 'bg-netflixRed',
-        info: 'bg-blue-600',
-        warning: 'bg-amber-600'
-      };
-
-      const icons = {
-        success: 'fa-circle-check',
-        error: 'fa-circle-exclamation',
-        info: 'fa-circle-info',
-        warning: 'fa-triangle-exclamation'
-      };
+      const bgColors = { success: 'bg-emerald-600', error: 'bg-netflixRed', info: 'bg-blue-600', warning: 'bg-amber-600' };
+      const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info', warning: 'fa-triangle-exclamation' };
 
       toast.className = `${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto min-w-[280px]`;
-      toast.innerHTML = `
-        <i class="fa-solid ${icons[type]} text-lg"></i>
-        <span class="text-sm font-semibold flex-1">${message}</span>
-      `;
+      toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-sm font-semibold flex-1">${message}</span>`;
 
       container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.classList.remove('translate-y-2', 'opacity-0');
-      }, 10);
-
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
       setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-y-2');
         setTimeout(() => toast.remove(), 300);
       }, 4000);
     }
 
-    // Helper: Extrair Embed ID do YouTube
     function extractYouTubeEmbedUrl(url) {
       if (!url) return '';
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -537,7 +588,6 @@
       return url;
     }
 
-    // Helper: Gerar Thumbnail do YouTube se não houver capa
     function getYouTubeThumbnail(url) {
       if (!url) return 'https://placehold.co/400x600/181818/ffffff?text=Sem+Capa';
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -548,7 +598,7 @@
       return 'https://placehold.co/400x600/181818/ffffff?text=L';
     }
 
-    // Alternar Telas de Login / Registro
+    // Navegação de Auth
     document.getElementById('btn-show-register').addEventListener('click', () => {
       document.getElementById('login-form').classList.add('hidden');
       document.getElementById('register-form').classList.remove('hidden');
@@ -559,30 +609,28 @@
       document.getElementById('login-form').classList.remove('hidden');
     });
 
-    // CADASTRO DE USUÁRIO NO FIREBASE REALTIME DATABASE (Sem campo CPF)
+    // Cadastro
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('reg-username').value.trim();
       const password = document.getElementById('reg-password').value.trim();
 
       if (!username || !password) {
-        showToast('Preencha todos os campos!', 'warning');
+        showToast('Preencha usuário e senha!', 'warning');
         return;
       }
 
       const userKey = username.toLowerCase();
 
       try {
-        // Verificar se usuário já existe
         const userRef = ref(db, `users/${userKey}`);
         const snapshot = await get(userRef);
 
         if (snapshot.exists()) {
-          showToast('Este nome de usuário já existe!', 'error');
+          showToast('Nome de usuário já existente!', 'error');
           return;
         }
 
-        // Salvar usuário no nó `users/{username_clean}`
         await set(userRef, {
           username: username,
           password: password,
@@ -592,14 +640,13 @@
         showToast('Conta criada com sucesso! Faça login.', 'success');
         document.getElementById('register-form').reset();
         document.getElementById('btn-show-login').click();
-
       } catch (err) {
         console.error(err);
-        showToast('Erro ao criar conta no banco de dados.', 'error');
+        showToast('Erro ao criar conta no banco.', 'error');
       }
     });
 
-    // LOGIN DE USUÁRIO
+    // Login
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-username').value.trim();
@@ -616,28 +663,17 @@
         const userRef = ref(db, `users/${userKey}`);
         const snapshot = await get(userRef);
 
-        if (!snapshot.exists()) {
-          showToast('Usuário não encontrado!', 'error');
+        if (!snapshot.exists() || snapshot.val().password !== password) {
+          showToast('Usuário ou senha incorretos!', 'error');
           return;
         }
 
-        const userData = snapshot.val();
-
-        if (userData.password !== password) {
-          showToast('Senha incorreta!', 'error');
-          return;
-        }
-
-        // Sucesso no login
-        loginUser(userData.username);
-
+        loginUser(snapshot.val().username);
       } catch (err) {
-        console.error(err);
-        showToast('Erro ao realizar login no Firebase.', 'error');
+        showToast('Erro ao fazer login.', 'error');
       }
     });
 
-    // Função de Ativação da Sessão de Usuário
     function loginUser(username) {
       currentUser = username;
       sessionStorage.setItem('netflix_user', username);
@@ -650,7 +686,6 @@
       document.getElementById('hero-username-text').innerText = username;
       document.getElementById('user-avatar-initial').innerText = username.charAt(0).toUpperCase();
 
-      // Verificar se é o usuário "Lorenzo" (independente de maiúsculas/minúsculas)
       const isLorenzo = username.toLowerCase() === 'lorenzo';
 
       if (isLorenzo) {
@@ -666,17 +701,16 @@
       listenToCatalog();
     }
 
-    // LOGOUT
     document.getElementById('btn-logout').addEventListener('click', () => {
       currentUser = null;
       sessionStorage.removeItem('netflix_user');
       document.getElementById('main-app').classList.add('hidden');
       document.getElementById('main-app').classList.remove('flex');
       document.getElementById('auth-screen').classList.remove('hidden');
-      showToast('Você saiu da sua conta.', 'info');
+      showToast('Você saiu da conta.', 'info');
     });
 
-    // ESCUTAR O CATÁLOGO EM TEMPO REAL NO FIREBASE (`catalog/`)
+    // Ouvinte Firebase do Catálogo
     function listenToCatalog() {
       const catalogRef = ref(db, 'catalog');
       onValue(catalogRef, (snapshot) => {
@@ -688,16 +722,19 @@
           });
         }
         renderCatalog(getFilteredCatalog());
+        hideLoadingScreen();
+      }, (error) => {
+        console.error(error);
+        hideLoadingScreen();
       });
     }
 
-    // Pesquisa em tempo real por primeira letra ou palavra
+    // Busca
     const searchInput = document.getElementById('search-input');
     const clearSearchBtn = document.getElementById('clear-search');
 
     searchInput.addEventListener('input', () => {
-      const val = searchInput.value;
-      if (val.length > 0) {
+      if (searchInput.value.length > 0) {
         clearSearchBtn.classList.remove('hidden');
       } else {
         clearSearchBtn.classList.add('hidden');
@@ -721,7 +758,7 @@
       });
     }
 
-    // RENDERIZAR GRÁFICO DO CATÁLOGO
+    // Renderizar Grid do Catálogo
     function renderCatalog(items) {
       const grid = document.getElementById('catalog-grid');
       const emptyState = document.getElementById('empty-state');
@@ -749,30 +786,25 @@
         const isSeries = item.type === 'series';
 
         card.innerHTML = `
-          <!-- Poster -->
           <div class="relative w-full aspect-[2/3] bg-black/50 overflow-hidden">
             <img src="${posterUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x600/181818/ffffff?text=L'">
             
-            <!-- Type Badge -->
             <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-black/70 backdrop-blur-md border border-white/10 text-white">
               <i class="fa-solid ${isSeries ? 'fa-tv text-netflixRed' : 'fa-film text-netflixRed'} mr-1"></i>
               ${isSeries ? 'Série' : 'Filme'}
             </span>
 
-            <!-- Rating Badge -->
             <span class="absolute top-2 right-2 rating-badge rating-${item.rating || 'L'}">
               ${item.rating || 'L'}
             </span>
 
-            <!-- Hover Play Overlay -->
-            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center gap-2">
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
               <button class="w-12 h-12 rounded-full bg-netflixRed text-white flex items-center justify-center text-lg shadow-xl hover:scale-110 transition">
-                <i class="fa-solid fa-play ml-1"></i>
+                <i class="fa-solid fa-eye"></i>
               </button>
             </div>
           </div>
 
-          <!-- Info Footer -->
           <div class="p-3 flex-1 flex flex-col justify-between bg-[#181818]">
             <div>
               <h4 class="font-bold text-sm text-white truncate group-hover:text-netflixRed transition">${item.title}</h4>
@@ -783,42 +815,123 @@
 
             ${isLorenzo && isSeries ? `
               <button data-series-id="${item.id}" class="btn-manage-series mt-3 w-full py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-semibold rounded border border-gray-600 text-amber-400 flex items-center justify-center gap-1 transition">
-                <i class="fa-solid fa-gear text-netflixRed"></i> Gerenciar Episódios
+                <i class="fa-solid fa-gear"></i> Gerenciar Episódios
               </button>
             ` : ''}
           </div>
         `;
 
-        // Evento de clique para assistir
+        // CLIQUE NO CARD -> ABRE O MODAL DE DETALHES
         card.addEventListener('click', (e) => {
           if (e.target.closest('.btn-manage-series')) return;
-          openPlayerModal(item);
+          openDetailsModal(item);
         });
 
         grid.appendChild(card);
       });
 
-      // Event Listeners para botões de gerenciamento de série do Lorenzo
       if (isLorenzo) {
         document.querySelectorAll('.btn-manage-series').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const seriesId = btn.getAttribute('data-series-id');
-            openSeriesModal(seriesId);
+            openSeriesModal(btn.getAttribute('data-series-id'));
           });
         });
       }
     }
 
-    // MODAIS MANAGEMENT
-    const uploadModal = document.getElementById('upload-modal');
-    const seriesModal = document.getElementById('series-modal');
-    const playerModal = document.getElementById('player-modal');
+    // MODAL DE DETALHES (FOTO GRANDE + TÍTULO + CLASSIFICAÇÃO + ASSISTIR)
+    function openDetailsModal(item) {
+      currentSelectedItem = item;
+      const posterUrl = item.posterUrl || getYouTubeThumbnail(item.youtubeUrl);
 
+      document.getElementById('detail-poster').src = posterUrl;
+      document.getElementById('detail-title').innerText = item.title;
+
+      const ratingBadge = document.getElementById('detail-rating-badge');
+      ratingBadge.innerText = item.rating || 'L';
+      ratingBadge.className = `rating-badge rating-${item.rating || 'L'}`;
+
+      const typeBadge = document.getElementById('detail-type-badge');
+      typeBadge.innerText = item.type === 'series' ? 'Série' : 'Filme';
+
+      const epCountLabel = document.getElementById('detail-episodes-count');
+      const episodesContainer = document.getElementById('detail-episodes-container');
+      const episodesGrid = document.getElementById('detail-episodes-grid');
+
+      if (item.type === 'series') {
+        const episodes = item.episodes ? Object.values(item.episodes) : [];
+        epCountLabel.innerText = `${episodes.length} Episódio(s)`;
+        episodesContainer.classList.remove('hidden');
+        episodesGrid.innerHTML = '';
+
+        if (episodes.length > 0) {
+          selectedEpisodeUrl = episodes[0].youtubeUrl;
+
+          episodes.forEach((ep, index) => {
+            const btn = document.createElement('button');
+            btn.className = `p-2.5 rounded-lg border text-left text-xs font-semibold flex items-center justify-between transition ${index === 0 ? 'bg-netflixRed text-white border-netflixRed' : 'bg-[#222] text-gray-300 border-gray-700 hover:border-gray-500'}`;
+            btn.innerHTML = `<span class="truncate">${ep.title}</span><i class="fa-solid fa-play text-[10px]"></i>`;
+
+            btn.addEventListener('click', () => {
+              Array.from(episodesGrid.children).forEach(b => {
+                b.className = 'p-2.5 rounded-lg border border-gray-700 bg-[#222] text-gray-300 hover:border-gray-500 text-left text-xs font-semibold flex items-center justify-between transition';
+              });
+              btn.className = 'p-2.5 rounded-lg border border-netflixRed bg-netflixRed text-white text-left text-xs font-semibold flex items-center justify-between transition';
+              selectedEpisodeUrl = ep.youtubeUrl;
+            });
+
+            episodesGrid.appendChild(btn);
+          });
+        } else {
+          selectedEpisodeUrl = item.youtubeUrl;
+          episodesGrid.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum episódio cadastrado.</p>`;
+        }
+      } else {
+        epCountLabel.innerText = 'Filme Completo';
+        episodesContainer.classList.add('hidden');
+        selectedEpisodeUrl = item.youtubeUrl;
+      }
+
+      document.getElementById('details-modal').classList.remove('hidden');
+    }
+
+    document.getElementById('close-details').addEventListener('click', () => {
+      document.getElementById('details-modal').classList.add('hidden');
+    });
+
+    // BOTÃO "ASSISTIR AGORA" -> ABRE O PLAYER DO YOUTUBE
+    document.getElementById('btn-start-watch').addEventListener('click', () => {
+      if (!currentSelectedItem) return;
+
+      const videoUrl = selectedEpisodeUrl || currentSelectedItem.youtubeUrl;
+      if (!videoUrl) {
+        showToast('Nenhum link de vídeo disponível!', 'warning');
+        return;
+      }
+
+      document.getElementById('details-modal').classList.add('hidden');
+
+      const iframe = document.getElementById('youtube-iframe');
+      document.getElementById('player-title').innerText = currentSelectedItem.title;
+      document.getElementById('player-type-badge').innerText = currentSelectedItem.type === 'series' ? 'Série' : 'Filme';
+
+      iframe.src = extractYouTubeEmbedUrl(videoUrl);
+      document.getElementById('player-modal').classList.remove('hidden');
+    });
+
+    // FECHAR PLAYER
+    document.getElementById('close-player').addEventListener('click', () => {
+      document.getElementById('youtube-iframe').src = '';
+      document.getElementById('player-modal').classList.add('hidden');
+    });
+
+    // MODAL DE UPLOAD (LORENZO)
+    const uploadModal = document.getElementById('upload-modal');
     document.querySelectorAll('.close-modal').forEach(btn => {
       btn.addEventListener('click', () => {
         uploadModal.classList.add('hidden');
-        seriesModal.classList.add('hidden');
+        document.getElementById('series-modal').classList.add('hidden');
       });
     });
 
@@ -827,26 +940,9 @@
       uploadModal.classList.remove('hidden');
     });
 
-    // Alternar visibilidade de aviso caso selecione Série no Upload
-    document.querySelectorAll('input[name="content-type"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        const isSeries = e.target.value === 'series';
-        if (isSeries) {
-          document.getElementById('series-yt-note').classList.remove('hidden');
-        } else {
-          document.getElementById('series-yt-note').classList.add('hidden');
-        }
-      });
-    });
-
-    // SUBMIT DO FORMULÁRIO DE ENVIO DE CONTEÚDO (LORENZO)
     document.getElementById('upload-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      if (!currentUser || currentUser.toLowerCase() !== 'lorenzo') {
-        showToast('Apenas o usuário Lorenzo pode enviar vídeos!', 'error');
-        return;
-      }
+      if (!currentUser || currentUser.toLowerCase() !== 'lorenzo') return;
 
       const type = document.querySelector('input[name="content-type"]:checked').value;
       const title = document.getElementById('content-title').value.trim();
@@ -854,70 +950,50 @@
       const youtubeUrl = document.getElementById('content-youtube').value.trim();
       const posterUrl = document.getElementById('content-poster').value.trim();
 
-      if (!title) {
-        showToast('Insira o nome do filme/série!', 'warning');
-        return;
-      }
-
       try {
         const newCatalogRef = push(ref(db, 'catalog'));
-
         const payload = {
-          title,
-          type,
-          rating,
+          title, type, rating,
           youtubeUrl: youtubeUrl || '',
           posterUrl: posterUrl || '',
           createdBy: currentUser,
           createdAt: Date.now()
         };
 
-        // Se for série e tiver URL, cria o 1º episódio por padrão
         if (type === 'series' && youtubeUrl) {
           payload.episodes = {
-            ep_1: {
-              title: "Episódio 1 - Piloto",
-              youtubeUrl: youtubeUrl,
-              createdAt: Date.now()
-            }
+            ep_1: { title: "Episódio 1 - Piloto", youtubeUrl, createdAt: Date.now() }
           };
         }
 
         await set(newCatalogRef, payload);
-
         showToast(`${type === 'series' ? 'Série' : 'Filme'} cadastrado com sucesso!`, 'success');
         uploadModal.classList.add('hidden');
-
       } catch (err) {
-        console.error(err);
-        showToast('Erro ao salvar no banco de dados.', 'error');
+        showToast('Erro ao publicar.', 'error');
       }
     });
 
-    // ABRIR MODAL DE GERENCIAMENTO DE EPISÓDIOS DA SÉRIE
+    // GERENCIAR EPISÓDIOS (LORENZO)
     async function openSeriesModal(seriesId) {
       currentSeriesEditingId = seriesId;
-      const seriesRef = ref(db, `catalog/${seriesId}`);
-      const snapshot = await get(seriesRef);
-
+      const snapshot = await get(ref(db, `catalog/${seriesId}`));
       if (!snapshot.exists()) return;
 
       const series = snapshot.val();
       document.getElementById('series-modal-title').innerText = `Série: ${series.title}`;
-      
       renderEpisodesList(series.episodes || {});
       document.getElementById('add-episode-form').reset();
-      seriesModal.classList.remove('hidden');
+      document.getElementById('series-modal').classList.remove('hidden');
     }
 
-    // RENDERIZAR LISTA DE EPISÓDIOS CADASTRADOS
     function renderEpisodesList(episodes) {
       const container = document.getElementById('episodes-list');
       container.innerHTML = '';
-
       const keys = Object.keys(episodes);
+
       if (keys.length === 0) {
-        container.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum episódio cadastrado ainda.</p>`;
+        container.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum episódio cadastrado.</p>`;
         return;
       }
 
@@ -925,7 +1001,6 @@
         const ep = episodes[epKey];
         const row = document.createElement('div');
         row.className = 'flex items-center justify-between p-2.5 bg-[#181818] rounded-lg border border-gray-800 text-xs';
-
         row.innerHTML = `
           <div class="flex items-center gap-2 truncate pr-2">
             <i class="fa-solid fa-play-circle text-netflixRed"></i>
@@ -937,7 +1012,6 @@
         `;
 
         row.querySelector('.btn-delete-ep').addEventListener('click', async () => {
-          if (!currentSeriesEditingId) return;
           try {
             await remove(ref(db, `catalog/${currentSeriesEditingId}/episodes/${epKey}`));
             showToast('Episódio removido.', 'info');
@@ -951,7 +1025,6 @@
       });
     }
 
-    // ADICIONAR NOVO EPISÓDIO
     document.getElementById('add-episode-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentSeriesEditingId) return;
@@ -959,99 +1032,26 @@
       const title = document.getElementById('ep-title').value.trim();
       const youtubeUrl = document.getElementById('ep-youtube').value.trim();
 
-      if (!title || !youtubeUrl) {
-        showToast('Preencha título e link do YouTube!', 'warning');
-        return;
-      }
-
       try {
         const newEpRef = push(ref(db, `catalog/${currentSeriesEditingId}/episodes`));
-        await set(newEpRef, {
-          title,
-          youtubeUrl,
-          createdAt: Date.now()
-        });
-
-        showToast('Episódio adicionado com sucesso!', 'success');
+        await set(newEpRef, { title, youtubeUrl, createdAt: Date.now() });
+        showToast('Episódio adicionado!', 'success');
         document.getElementById('add-episode-form').reset();
         openSeriesModal(currentSeriesEditingId);
-
       } catch (err) {
-        console.error(err);
         showToast('Erro ao salvar episódio.', 'error');
       }
     });
 
-    // ABRIR PLAYER DE VÍDEO
-    function openPlayerModal(item) {
-      const iframe = document.getElementById('youtube-iframe');
-      const titleLabel = document.getElementById('player-title');
-      const typeBadge = document.getElementById('player-type-badge');
-      const episodesSection = document.getElementById('player-episodes-section');
-      const episodesGrid = document.getElementById('player-episodes-grid');
-
-      titleLabel.innerText = item.title;
-      typeBadge.innerText = item.type === 'series' ? 'Série' : 'Filme';
-
-      if (item.type === 'series') {
-        episodesSection.classList.remove('hidden');
-        episodesGrid.innerHTML = '';
-
-        const episodes = item.episodes ? Object.values(item.episodes) : [];
-
-        if (episodes.length > 0) {
-          // Toca o 1º episódio por padrão
-          iframe.src = extractYouTubeEmbedUrl(episodes[0].youtubeUrl);
-
-          episodes.forEach((ep, index) => {
-            const btn = document.createElement('button');
-            btn.className = `p-2.5 rounded-lg border text-left text-xs font-semibold flex items-center justify-between transition ${index === 0 ? 'bg-netflixRed text-white border-netflixRed' : 'bg-[#222] text-gray-300 border-gray-700 hover:border-gray-500'}`;
-            btn.innerHTML = `
-              <span class="truncate">${ep.title}</span>
-              <i class="fa-solid fa-play text-[10px]"></i>
-            `;
-
-            btn.addEventListener('click', () => {
-              Array.from(episodesGrid.children).forEach(b => {
-                b.className = 'p-2.5 rounded-lg border border-gray-700 bg-[#222] text-gray-300 hover:border-gray-500 text-left text-xs font-semibold flex items-center justify-between transition';
-              });
-              btn.className = 'p-2.5 rounded-lg border border-netflixRed bg-netflixRed text-white text-left text-xs font-semibold flex items-center justify-between transition';
-
-              iframe.src = extractYouTubeEmbedUrl(ep.youtubeUrl);
-            });
-
-            episodesGrid.appendChild(btn);
-          });
-        } else {
-          iframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
-          episodesGrid.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum episódio listado.</p>`;
-        }
-
-      } else {
-        // É Filme
-        episodesSection.classList.add('hidden');
-        iframe.src = extractYouTubeEmbedUrl(item.youtubeUrl);
-      }
-
-      playerModal.classList.remove('hidden');
-    }
-
-    // FECHAR PLAYER DE VÍDEO
-    document.getElementById('close-player').addEventListener('click', () => {
-      const iframe = document.getElementById('youtube-iframe');
-      iframe.src = ''; // Parar execução do vídeo
-      playerModal.classList.add('hidden');
-    });
-
-    // VERIFICAR SESSÃO AO CARREGAR A PÁGINA
+    // VERIFICAR SESSÃO NO CARREGAMENTO
     window.addEventListener('DOMContentLoaded', () => {
       const savedUser = sessionStorage.getItem('netflix_user');
       if (savedUser) {
         loginUser(savedUser);
+      } else {
+        hideLoadingScreen();
       }
     });
-
   </script>
 </body>
 </html>
-```
